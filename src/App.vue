@@ -1,17 +1,9 @@
-<template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view />
-</template>
+<template lang="pug">
+div
+  header.relative.z-10.flex-none.py-3.pl-5.pr-3.flex.items-center.space-x-4(class="sm:pl-6 sm:pr-4 md:pr-3.5 lg:px-6")
+    #nav.flex.flex-auto.items-center.min-w-0.space-x-5
+      router-link(to="/") Home
 
-<style lang="stylus">
-#app
-  font-family Avenir, Helvetica, Arial, sans-serif
-  -webkit-font-smoothing antialiased
-  -moz-osx-font-smoothing grayscale
-  text-align center
-  color #2c3e50
-  margin-top 60px
-</style>
+  main.flex-auto.relative.border-t.border-gray-200(class="dark:border-gray-800")
+    router-view
+</template>
