@@ -1,11 +1,17 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router"
-import Home from "../views/Home.vue"
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+
+import { INTERCOM } from './routes'
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: "/",
-    name: "Home",
-    component: Home
+    path: '/',
+    name: 'Home',
+    component: () => import('@/views/Home.vue')
+  },
+  {
+    path: '/intercom',
+    name: INTERCOM,
+    component: () => import('@/views/Intercom.vue')
   }
 ]
 
