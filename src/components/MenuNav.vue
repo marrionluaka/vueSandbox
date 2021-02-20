@@ -1,6 +1,6 @@
 <template lang="pug">
 nav.flex.flex-col.justify-between.flex-none.w-16.bg-gray-200
-  ul.space-y-4.pt-5.cursor-pointer.flex-none
+  ul.space-y-4.cursor-pointer.flex-none
     MenuItem(
       v-for="item in upperNav"
       :to="item.name"
