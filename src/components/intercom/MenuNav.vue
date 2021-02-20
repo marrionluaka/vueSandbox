@@ -19,21 +19,21 @@ nav.flex.flex-col.justify-between.flex-none.w-16.bg-gray-200
     )
       svg.w-6.h-6(fill='none' stroke='currentColor' viewbox='0 0 24 24' xmlns='http://www.w3.org/2000/svg')
         path(stroke-linecap='round' stroke-linejoin='round' stroke-width='2' :d="item.d")
-    li.flex.justify-center.items-center
-      img.h-9.w-9.rounded-full.object-cover.my-2(
-        alt='Profile image'
-        src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2.35&w=144&h=144&q=80'
-      )
+    li.flex.justify-center.items-center(@click="toggleUserPopup")
+      ProfileImage
+
+  UserPopup(v-show="isUserPopupIsOpen")
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 
-import { MenuItem } from './shared'
+import { MenuItem, ProfileImage } from './shared'
+import UserPopup from './UserPopup.vue'
 import useComponentState from '@/hooks/useComponentState'
 
 export default defineComponent({
-  components: { MenuItem },
+  components: { MenuItem, UserPopup, ProfileImage },
   setup() {
     const upperNav = ref([
       {
@@ -83,12 +83,16 @@ export default defineComponent({
       }
     ])
     const [currentLink, setCurrentLink] = useComponentState('inbox')
+    const [isUserPopupIsOpen, setUserPopup] = useComponentState(false)
+    const toggleUserPopup = () => setUserPopup(!isUserPopupIsOpen.value)
 
     return {
       upperNav,
       lowerNav,
       currentLink,
-      setCurrentLink
+      setCurrentLink,
+      toggleUserPopup,
+      isUserPopupIsOpen
     }
   }
 })

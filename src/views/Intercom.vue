@@ -10,7 +10,7 @@
 
 <script>
 import { defineComponent } from 'vue'
-import MenuNav from '@/components/MenuNav'
+import MenuNav from '@/components/intercom/MenuNav'
 
 export default defineComponent({
   components: { MenuNav },
