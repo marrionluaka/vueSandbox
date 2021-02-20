@@ -1,5 +1,5 @@
 <template lang="pug">
-.flex.flex-col.absolute.bg-white.bottom-1.left-16.border-l.shadow-xl(class="w-3/12")
+.flex.flex-col.absolute.bg-white.bottom-1.left-16.border-l.shadow-xl(style="width: 250px")
   //- user section
   .user.flex.border-b.px-7.py-4
     .relative
