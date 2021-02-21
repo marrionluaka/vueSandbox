@@ -30,6 +30,7 @@ import { defineComponent, ref } from 'vue'
 
 import { MenuItem, ProfileImage } from './shared'
 import UserPopup from './UserPopup.vue'
+import useToggle from '@/hooks/useToggle'
 import useComponentState from '@/hooks/useComponentState'
 
 export default defineComponent({
@@ -83,8 +84,7 @@ export default defineComponent({
       }
     ])
     const [currentLink, setCurrentLink] = useComponentState('inbox')
-    const [isUserPopupIsOpen, setUserPopup] = useComponentState(false)
-    const toggleUserPopup = () => setUserPopup(!isUserPopupIsOpen.value)
+    const [isUserPopupIsOpen, toggleUserPopup] = useToggle()
 
     return {
       upperNav,

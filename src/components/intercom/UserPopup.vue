@@ -65,7 +65,7 @@
 
   //- log out
   .auth.px-7.py-4
-    p.text-sm.font-semibold.cursor-pointer Log out
+    router-link.text-sm.font-semibold.cursor-pointer.block(to="/") Log out
 </template>
 
 <script lang="ts">
