@@ -2,9 +2,7 @@
 .flex.flex-col.absolute.bg-white.bottom-1.border-l.shadow-xl.z-10(style="width: 250px;transform: translateX(27%);")
   //- user section
   .user.flex.border-b.px-7.py-4
-    .relative
-      ProfileImage
-      span.absolute.bg-green-400.bottom-1.p-1.right-0.rounded-full.border-2.border-white
+    ProfileImage
     .leading-none.ml-4.mt-2
       p.font-semibold.text-sm William Defoe
       span.block.text-gray-500.text-xs Active

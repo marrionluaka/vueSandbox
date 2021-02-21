@@ -1,14 +1,20 @@
 <template lang="pug">
-img.h-9.w-9.rounded-full.object-cover.my-2(
-  :alt="$props.alt"
-  :src="$props.src"
-)
+.relative
+  img.h-9.w-9.rounded-full.object-cover.my-2(
+    :alt="$props.alt"
+    :src="$props.src"
+  )
+  span.absolute.bottom-1.p-1.right-0.rounded-full.border-2(:class="[className]")
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
 export default defineComponent({
   props: {
+    className: {
+      type: String,
+      default: 'bg-green-400 border-white'
+    },
     alt: {
       type: String,
       default: 'Profile Image'
