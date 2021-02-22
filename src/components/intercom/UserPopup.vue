@@ -1,5 +1,5 @@
 <template lang="pug">
-.flex.flex-col.absolute.bg-white.bottom-1.border-l.shadow-xl.z-10(style="width: 250px;transform: translateX(27%);")
+.flex.flex-col.absolute.z-20.bg-white.bottom-1.border-l.shadow-xl.z-10(style="width: 250px;transform: translateX(27%);")
   //- user section
   .user.flex.border-b.px-7.py-4
     ProfileImage

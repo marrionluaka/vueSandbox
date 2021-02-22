@@ -1,5 +1,5 @@
 <template lang="pug">
-.overflow-y-scroll.h-32.absolute.top-40.left-56.bg-white.border-l.shadow-xl(style="width:300px;min-height:330px;")
+.overflow-y-scroll.h-32.absolute.z-10.top-40.left-56.bg-white.border-l.shadow-xl(style="width:300px;min-height:330px;")
   //- Visible segments
   div
     .flex.justify-between.px-3.py-1.bg-gray-100

@@ -16,7 +16,7 @@ nav
         li.flex.justify-between
           p.flex-none.font-medium Active users
           p.flex-none 152
-      button.pl-1.pt-4.font-semibold.text-gray-400.text-sm.cursor-pointer(class="focus:outline-none" @click="togglePopup") Show 10 hidden segments
+      button.pl-1.pt-4.font-semibold.text-gray-400.text-sm.cursor-pointer(class="hover:text-gray-300 focus:outline-none" @click="togglePopup") Show 10 hidden segments
       SegmentPopup(v-show="isPopupIsOpen" :segments="segments")
     li
       p.font-semibold.text-gray-800.cursor-pointer Companies
