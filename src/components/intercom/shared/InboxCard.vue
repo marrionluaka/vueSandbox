@@ -6,7 +6,7 @@ a.block.border-b(href="#" @click.prevent="$emit('onClick', messageData.id)")
       .flex-grow.leading-normal.ml-3
         p.font-semibold.text-blue-500 {{ messageData.name }}
         span.block.text-sm {{ messageData.location }}
-      p {{ messageData.timeStamp }}
+      p.text-sm {{ messageData.timeStamp }}
     p.pt-2.truncate {{ messageData.excerpt }}
 </template>
 
