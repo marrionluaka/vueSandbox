@@ -34,10 +34,12 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { ISegment } from '@/global-types'
+
 export default defineComponent({
   props: {
     segments: {
-      type: Array,
+      type: Array as () => ISegment[],
       required: true
     }
   }

@@ -14,12 +14,14 @@ a.block.border-b(href="#" @click.prevent="$emit('onClick', messageData.id)")
 import { defineComponent, computed } from 'vue'
 
 import ProfileImage from './ProfileImage.vue'
+import { IMessageData } from '@/global-types'
 
 export default defineComponent({
   components: { ProfileImage },
+
   props: {
     messageData: {
-      type: Object,
+      type: Object as () => IMessageData,
       required: true
     }
   },
