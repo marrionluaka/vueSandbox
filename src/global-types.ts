@@ -11,4 +11,5 @@ export interface IMessageData {
 export interface ISegment {
   name: string
   status: string
+  isVisible: boolean
 }

@@ -27,8 +27,9 @@ export default defineComponent({
   },
 
   setup(props) {
-    const currentClass = computed(() => (props.messageData.isActive ? 'border-blue-500 bg-blue-100' : 'border-transparent'))
-    return { currentClass }
+    return {
+      currentClass: computed(() => (props.messageData.isActive ? 'border-blue-500 bg-blue-100' : 'border-transparent'))
+    }
   }
 })
 </script>

@@ -25,42 +25,25 @@ nav
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { defineComponent, ref, onMounted, Ref } from 'vue'
 
 import useToggle from '@/hooks/useToggle'
+import { ISegment } from '@/global-types'
 import { SegmentPopup } from '@/components/intercom/shared'
 
 export default defineComponent({
   components: { SegmentPopup },
   setup() {
-    const segments = reactive([
-      {
-        name: 'Slipping Away',
-        status: 'Default Segment',
-        isVisible: true
-      },
-      {
-        name: 'Active users',
-        status: 'Created by William 2 years ago',
-        isVisible: true
-      },
-      {
-        name: 'New',
-        status: 'Default Segment',
-        isVisible: false
-      },
-      {
-        name: 'Active',
-        status: 'Default Segment',
-        isVisible: false
-      },
-      {
-        name: 'Callback',
-        status: 'Created by William 2 years ago',
-        isVisible: false
-      }
-    ])
+    const segments: Ref<ISegment[]> = ref([])
     const [isPopupIsOpen, togglePopup] = useToggle()
+
+    onMounted(async () => {
+      const response = await fetch('/api/segments')
+      const data = await response.json()
+
+      segments.value = data
+    })
+
     return {
       segments,
       isPopupIsOpen,

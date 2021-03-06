@@ -3,6 +3,9 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import './assets/index.css'
+import server from './server'
+
+server.init()
 
 createApp(App)
   .use(store)
