@@ -11,7 +11,7 @@ a.block.border-b(href="#" @click.prevent="$emit('onClick', messageData.id)")
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue'
+import { defineComponent, computed, PropType } from 'vue'
 
 import ProfileImage from './ProfileImage.vue'
 import { IMessageData } from '@/global-types'
@@ -21,7 +21,7 @@ export default defineComponent({
 
   props: {
     messageData: {
-      type: Object as () => IMessageData,
+      type: Object as PropType<IMessageData>,
       required: true
     }
   },

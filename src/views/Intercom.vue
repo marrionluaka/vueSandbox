@@ -43,8 +43,8 @@
 import { defineComponent, reactive } from 'vue'
 
 import { InboxCard } from '@/components/intercom/shared'
-import MenuNav from '@/components/intercom/MenuNav'
-import SubMenuNav from '@/components/intercom/SubMenuNav'
+import MenuNav from '@/components/intercom/MenuNav.vue'
+import SubMenuNav from '@/components/intercom/SubMenuNav.vue'
 
 export default defineComponent({
   components: { MenuNav, SubMenuNav, InboxCard },

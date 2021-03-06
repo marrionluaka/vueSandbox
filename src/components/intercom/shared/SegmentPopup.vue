@@ -33,13 +33,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, PropType } from 'vue'
 import { ISegment } from '@/global-types'
 
 export default defineComponent({
   props: {
     segments: {
-      type: Array as () => ISegment[],
+      type: Array as PropType<ISegment[]>,
       required: true
     }
   }
