@@ -2,10 +2,20 @@ import Search from './Search.vue'
 
 export default {
   title: 'Example/Search',
-  component: Search
+  component: Search,
+  argTypes: {
+    onSubmit: {}
+  }
 }
 
-export const Primary = () => ({
+const Template = args => ({
   components: { Search },
-  template: '<Search />'
+
+  setup() {
+    return { args }
+  },
+
+  template: '<Search v-bind="args" />'
 })
+
+export const Primary = Template.bind({})

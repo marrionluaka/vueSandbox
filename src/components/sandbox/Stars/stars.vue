@@ -1,6 +1,6 @@
 <template lang="pug">
 ul.flex(data-test="stars")
-  StarIcon.text-yellow-400(
+  StarIcon.text-yellow-400.cursor-pointer(
     v-for="star in stars"
     :key="star"
     :fill="activeStar >= star ? color : 'transparent'"
