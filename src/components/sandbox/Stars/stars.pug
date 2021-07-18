@@ -1,0 +1,2 @@
+ul(data-test="stars")
+  li(v-for="star in stars" :key="star" :data-test="`rating-${star}`" @click="$emit('click', star)") {{ star }}

@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils'
-import Search from './index.vue'
+import Search from './search.vue'
 
 describe('Search specs', () => {
   let wrapper: any
