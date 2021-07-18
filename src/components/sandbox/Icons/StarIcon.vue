@@ -1,5 +1,10 @@
 <template lang="pug">
-svg.w-6.h-6.text-yellow-400(:fill='fill' stroke='currentColor' viewbox='0 0 24 24' xmlns='http://www.w3.org/2000/svg')
+svg.w-6.h-6(
+  :fill='fill'
+  viewbox='0 0 24 24'
+  stroke='currentColor'
+  xmlns='http://www.w3.org/2000/svg'
+)
   path(
     stroke-width='2'
     stroke-linecap='round'
@@ -17,7 +22,7 @@ export default defineComponent({
   props: {
     fill: {
       type: String as PropType<string>,
-      default: 'none'
+      default: 'transparent'
     }
   }
 })

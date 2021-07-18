@@ -1,9 +1,9 @@
 <template lang="pug">
 ul.flex(data-test="stars")
-  StarIcon(
+  StarIcon.text-yellow-400(
     v-for="star in stars"
     :key="star"
-    :fill="activeStar >= star ? color : ''"
+    :fill="activeStar >= star ? color : 'transparent'"
     :data-test="`rating-${star}`"
     @click="onClick(star)"
     @mouseover="activeStar = star"
@@ -24,7 +24,7 @@ export default defineComponent({
   props: {
     color: {
       type: String as PropType<string>,
-      default: 'yellow'
+      default: '#fbbf24'
     },
     ratings: {
       type: Number as PropType<number>,
