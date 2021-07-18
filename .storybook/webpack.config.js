@@ -8,6 +8,23 @@ module.exports = async ({ config }) => {
   })
 
   config.module.rules.push({
+    test: /\.css$/,
+    use: [
+      {
+        loader: 'postcss-loader',
+        options: {
+          ident: 'postcss',
+          plugins: [
+            require('tailwindcss'),
+            require('autoprefixer'),
+          ],
+        },
+      },
+    ],
+    include: rootPath
+  })
+
+  config.module.rules.push({
     test: /\.styl(us)?$/,
     use: ['style-loader', 'vue-style-loader', {
       loader: 'css-loader',

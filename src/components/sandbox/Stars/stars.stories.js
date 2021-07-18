@@ -1,4 +1,4 @@
-import Stars from './stars.vue'
+import Stars from './Stars.vue'
 
 export default {
   title: 'Example/Stars',

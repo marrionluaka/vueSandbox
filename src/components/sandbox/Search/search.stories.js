@@ -1,4 +1,4 @@
-import Search from './search.vue'
+import Search from './Search.vue'
 
 export default {
   title: 'Example/Search',
