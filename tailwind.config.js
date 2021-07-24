@@ -4,12 +4,14 @@ module.exports = {
   theme: {
     extend: {
       spacing: {
-        7: '1.75rem',
-      },
-    },
+        7: '1.75rem'
+      }
+    }
   },
   variants: {
-    extend: {},
+    extend: {
+      opacity: ['disabled']
+    }
   },
-  plugins: [],
+  plugins: []
 }
