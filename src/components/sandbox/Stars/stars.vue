@@ -14,7 +14,7 @@ ul.flex(data-test="stars")
 
 <script lang="ts">
 import { defineComponent, PropType, ref, Ref } from 'vue'
-import StarIcon from '../Icons/StarIcon.vue'
+import StarIcon from './StarIcon.vue'
 
 export default defineComponent({
   name: 'Stars',

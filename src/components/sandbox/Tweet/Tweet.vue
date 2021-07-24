@@ -17,7 +17,7 @@ div(class="max-w-xl" data-test="tweet")
 
 <script lang="ts">
 import { defineComponent, watch, ref, Ref, PropType, ComputedRef, computed } from 'vue'
-import Smiley from '../Icons/Smiley.vue'
+import Smiley from './Smiley.vue'
 
 export default defineComponent({
   name: 'Tweet',
