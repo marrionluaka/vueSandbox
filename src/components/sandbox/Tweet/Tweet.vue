@@ -3,7 +3,7 @@ div(class="max-w-xl" data-test="tweet")
   form(@submit.prevent="onSubmit")
     .flex.justify-items-end.rounded-md.border.p-3.mb-2
       textarea.w-full.resize-none.outline-none.mr-2(rows="4" role="textbox" data-test="tweet-box" v-model="tweetBox")
-      .flex.flex-col.justify-end
+      .flex.flex-col.justify-between
         Smiley.cursor-pointer
         span(data-test="tweet-limit") {{ tweetLimit }}
     button.py-2.px-4.bg-purple-500.text-white.font-semibold.rounded-full(
