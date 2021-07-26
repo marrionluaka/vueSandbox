@@ -4,7 +4,6 @@ export default {
   title: 'Example/Tweet',
   component: Tweet,
   argTypes: {
-    // -- Name of the method returned to the template in your component
     onSubmit: {}
   }
 }

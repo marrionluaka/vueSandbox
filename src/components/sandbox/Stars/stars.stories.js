@@ -4,7 +4,6 @@ export default {
   title: 'Example/Stars',
   component: Stars,
   argTypes: {
-    // -- Name of the method returned to the template in your component
     onClick: {}
   }
 }
