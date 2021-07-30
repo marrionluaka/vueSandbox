@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@heroicons/vue": "1.0.2",
+    "miragejs": "0.1.41",
     "storypug": "1.0.0-rc.8",
     "tslib": "2.3.0",
     "vue": "^3.0.0",
@@ -20,7 +21,6 @@
   },
   "devDependencies": {
     "@babel/core": "7.14.6",
-    "@miragejs/server": "0.1.29",
     "@prettier/plugin-pug": "^1.13.4",
     "@storybook/addon-actions": "6.3.4",
     "@storybook/addon-essentials": "6.3.4",

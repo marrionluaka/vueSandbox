@@ -5,7 +5,7 @@ import store from './store'
 import './assets/index.css'
 import server from './server'
 
-server.init()
+server()
 
 createApp(App)
   .use(store)
