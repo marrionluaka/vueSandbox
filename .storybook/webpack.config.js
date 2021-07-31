@@ -26,23 +26,22 @@ module.exports = async ({ config }) => {
 
   config.module.rules.push({
     test: /\.styl(us)?$/,
-    use: ['style-loader', 'vue-style-loader', {
-      loader: 'css-loader',
-      options: {
-        sourceMap: true,
-        importLoaders: 2,
-        onlyLocals: false
+    use: [
+      'style-loader', 'vue-style-loader', {
+        loader: 'css-loader',
+        options: {
+          sourceMap: true,
+          importLoaders: 2,
+          onlyLocals: false
+        }
+      },
+      'postcss-loader',
+      {
+        loader: 'stylus-loader',
+        options: {
+          sourceMap: true
+        }
       }
-    },
-    {
-      loader: 'stylus-loader',
-      options: {
-        sourceMap: true,
-        import: [
-          `${rootPath}/assets/styl/_variables.styl`
-        ]
-      }
-    }
     ],
     include: rootPath
   })

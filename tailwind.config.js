@@ -5,6 +5,10 @@ module.exports = {
     extend: {
       spacing: {
         7: '1.75rem'
+      },
+      transitionProperty: {
+        height: 'height',
+        spacing: 'margin, padding'
       }
     }
   },
