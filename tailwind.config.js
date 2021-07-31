@@ -7,6 +7,7 @@ module.exports = {
         7: '1.75rem'
       },
       transitionProperty: {
+        maxHeight: 'max-height',
         height: 'height',
         spacing: 'margin, padding'
       }
