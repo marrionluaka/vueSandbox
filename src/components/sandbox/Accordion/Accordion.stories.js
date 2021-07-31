@@ -1,4 +1,5 @@
 import Accordion from './Accordion.vue'
+import ChevronIcon from './ChevronIcon.vue'
 import AccordionTitle from './AccordionTitle.vue'
 import AccordionPanel from './AccordionPanel.vue'
 
@@ -8,7 +9,7 @@ export default {
 }
 
 const Template = args => ({
-  components: { Accordion, AccordionTitle, AccordionPanel },
+  components: { Accordion, ChevronIcon, AccordionTitle, AccordionPanel },
 
   setup() {
     return { args }
@@ -17,9 +18,12 @@ const Template = args => ({
   template: `
     <div>
       <Accordion v-bind="args">
-        <template #title>
+        <template #title="{ isOpen }">
           <AccordionTitle>
-            Title One
+            <div class="flex justify-between py-2">
+              <p>Title One</p>
+              <ChevronIcon class="transition-transform ease-in-out transform scale-75" :class="[isOpen ? 'rotate-0' : 'rotate-90']"/>
+            </div>
           </AccordionTitle>
         </template>
 
@@ -31,9 +35,12 @@ const Template = args => ({
       </Accordion>
 
       <Accordion v-bind="args">
-        <template #title>
+        <template #title="{ isOpen }">
           <AccordionTitle>
-            Title Two
+            <div class="flex justify-between py-2">
+              <p>Title Two</p>
+              <ChevronIcon class="transition-transform ease-in-out transform scale-75" :class="[isOpen ? 'rotate-0' : 'rotate-90']"/>
+            </div>
           </AccordionTitle>
         </template>
 
@@ -45,9 +52,12 @@ const Template = args => ({
       </Accordion>
 
       <Accordion v-bind="args">
-        <template #title>
+        <template #title="{ isOpen }">
           <AccordionTitle>
-            Title Three
+            <div class="flex justify-between py-2">
+              <p>Title Three</p>
+              <ChevronIcon class="transition-transform ease-in-out transform scale-75" :class="[isOpen ? 'rotate-0' : 'rotate-90']"/>
+            </div>
           </AccordionTitle>
         </template>
 
@@ -63,5 +73,5 @@ const Template = args => ({
 
 export const Primary = Template.bind({})
 Primary.args = {
-  isOpen: true
+  isOpen: false
 }

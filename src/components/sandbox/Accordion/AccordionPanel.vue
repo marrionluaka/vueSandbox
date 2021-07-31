@@ -18,7 +18,7 @@ export default defineComponent({
 
 <style lang="stylus" scoped>
 .accordion-panel
-  @apply max-h-0 overflow-hidden transition-all ease-in-out
+  @apply p-0 max-h-0 overflow-hidden transition-all ease-in-out
   &.active
-    @apply max-h-screen transition-all
+    @apply p-2 max-h-screen transition-all
 </style>
