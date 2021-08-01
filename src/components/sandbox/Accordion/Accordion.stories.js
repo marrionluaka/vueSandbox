@@ -9,12 +9,6 @@ export default {
 }
 
 const Template = args => ({
-  components: { Accordion, ChevronIcon, AccordionTitle, AccordionPanel },
-
-  setup() {
-    return { args }
-  },
-
   template: `
     <div>
       <Accordion v-bind="args">
@@ -68,7 +62,13 @@ const Template = args => ({
         </template>
       </Accordion>
     </div>
-  `
+  `,
+
+  components: { Accordion, ChevronIcon, AccordionTitle, AccordionPanel },
+
+  setup() {
+    return { args }
+  }
 })
 
 export const Primary = Template.bind({})

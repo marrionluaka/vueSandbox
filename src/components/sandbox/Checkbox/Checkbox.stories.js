@@ -1,3 +1,4 @@
+import { ref } from 'vue'
 import Checkbox from './Checkbox.vue'
 
 export default {
@@ -5,19 +6,39 @@ export default {
   component: Checkbox
 }
 
-const Template = args => ({
+const Template = () => ({
+  template: `
+    <div>
+      <div v-for="country in countries" :key="country.id">
+        <div class="flex items-center">
+          <Checkbox :id="country.id" :name="country.name" :value="country.value" @update:modelValue="onCountrySelected">
+            {{ country.name }}
+          </Checkbox>
+        </div>
+      </div>
+      <p>Selected Countries: {{ selectedCountries }}</p>
+    </div>
+  `,
+
   components: { Checkbox },
 
   setup() {
-    return { args }
-  },
+    const selectedCountries = ref([])
+    const countries = ref([
+      { id: 'fr-id', name: 'France', value: 'FR' },
+      { id: 'ca-id', name: 'Canada', value: 'CA' },
+      { id: 'jp-id', name: 'Japan', value: 'JP' },
+      { id: 'ru-id', name: 'Russia', value: 'RU' },
+      { id: 'us-id', name: 'United States', value: 'US' }
+    ])
 
-  template: '<Checkbox v-bind="args" />'
+    const onCountrySelected = country =>
+      (selectedCountries.value = selectedCountries.value.includes(country)
+        ? selectedCountries.value.filter(x => x !== country)
+        : selectedCountries.value.concat(country))
+
+    return { countries, selectedCountries, onCountrySelected }
+  }
 })
 
 export const Primary = Template.bind({})
-Primary.args = {
-  id: 'my-id',
-  name: 'country',
-  value: 'CA'
-}

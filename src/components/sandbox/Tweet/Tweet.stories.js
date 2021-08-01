@@ -9,13 +9,13 @@ export default {
 }
 
 const Template = args => ({
+  template: '<Tweet v-bind="args" />',
+
   components: { Tweet },
 
   setup() {
     return { args }
-  },
-
-  template: '<Tweet v-bind="args" />'
+  }
 })
 
 export const Primary = Template.bind({})

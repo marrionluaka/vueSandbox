@@ -9,13 +9,13 @@ export default {
 }
 
 const Template = args => ({
+  template: '<Search v-bind="args" />',
+
   components: { Search },
 
   setup() {
     return { args }
-  },
-
-  template: '<Search v-bind="args" />'
+  }
 })
 
 export const Primary = Template.bind({})

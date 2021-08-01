@@ -9,13 +9,13 @@ export default {
 }
 
 const Template = args => ({
+  template: '<Stars v-bind="args" />',
+
   components: { Stars },
 
   setup() {
     return { args }
-  },
-
-  template: '<Stars v-bind="args" />'
+  }
 })
 
 export const Primary = Template.bind({})

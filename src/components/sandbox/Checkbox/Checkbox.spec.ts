@@ -10,6 +10,9 @@ describe('Checkbox spec', () => {
         id: 'country',
         name: 'canada',
         value: 'CA'
+      },
+      slots: {
+        default: 'Canada'
       }
     })
   })
@@ -18,6 +21,10 @@ describe('Checkbox spec', () => {
 
   it('renders an Checkbox', () => {
     expect(wrapper.find('input[type="checkbox"]').exists()).toBe(true)
+  })
+
+  it('renders children.', () => {
+    expect(wrapper.html()).toContain('Canada')
   })
 
   it('displays attributes passed in.', async () => {
@@ -30,6 +37,6 @@ describe('Checkbox spec', () => {
 
   it('emits an "input" event.', async () => {
     await wrapper.find('input[type="checkbox"]').trigger('input')
-    expect(wrapper.emitted('input')[0][0]).toBe('CA')
+    expect(wrapper.emitted('update:modelValue')[0][0]).toBe('CA')
   })
 })

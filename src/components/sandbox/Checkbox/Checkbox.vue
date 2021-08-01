@@ -1,36 +1,39 @@
 <template lang="pug">
 .checkbox
-  input.checkbox-input(
-    type="checkbox"
-    :id="id"
-    :name="name"
-    :value="value"
-    class="focus:ring-indigo-500"
-    @input="$emit('input', $event.target.value)"
-  )
+  label(:for="id" class="cursor-pointer")
+    input.checkbox-input(
+      type="checkbox"
+      :id="id"
+      :name="name"
+      :value="value"
+      class="focus:ring-indigo-500"
+      @input="$emit('update:modelValue', $event.target.value)"
+    )
+    slot
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'Checkbox',
 
   props: {
     id: {
-      type: String as PropType<string>,
+      type: String,
       required: true
     },
     name: {
-      type: String as PropType<string>,
+      type: String,
       required: true
     },
     value: {
-      type: String as PropType<any>,
+      type: String,
       required: true
     }
   },
-  emits: ['input']
+
+  emits: ['update:modelValue']
 })
 </script>
 
@@ -38,5 +41,5 @@ export default defineComponent({
 .checkbox
   @apply flex items-center h-5
   &-input
-    @apply h-4 w-4 text-indigo-600 border-gray-300 rounded cursor-pointer
+    @apply h-4 w-4 mr-2 text-indigo-600 border-gray-300 rounded cursor-pointer
 </style>
