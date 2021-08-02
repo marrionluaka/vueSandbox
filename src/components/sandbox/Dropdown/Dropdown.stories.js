@@ -23,7 +23,6 @@ const Template = args => ({
 
 export const Primary = Template.bind({})
 Primary.args = {
-  currentOption: 'Option one',
   options
 }
 

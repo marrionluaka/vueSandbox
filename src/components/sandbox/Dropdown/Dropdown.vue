@@ -79,24 +79,10 @@ export default defineComponent({
   @apply flex flex-col m-0 relative cursor-pointer
   max-width 400px
   &.open
-    &::after
-      top -15px
-      transform rotateX(180deg)
     .dropdown__items
       @apply absolute overflow-y-scroll opacity-100 left-1/2
       max-height 240px
       left 0
-  &::after
-    @apply bg-contain bg-no-repeat absolute h-full right-0 pointer-events-none transition-all
-    content ""
-    width 32px
-    top 18px
-  &::before
-    @apply left-0 right-0 absolute
-    bottom 3px
-    height 1px
-    content ""
-    background-color #1d1d1f
 
   &__selected
     @apply py-3 pr-4 pl-3 bg-transparent capitalize
