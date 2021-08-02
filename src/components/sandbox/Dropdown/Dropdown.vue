@@ -1,0 +1,115 @@
+<template lang="pug">
+.dropdown(ref="dropdown" data-test="dropdown" :class="{ open: isOpen }")
+  .dropdown__selected(data-test="dropdown-selected" @click="isOpen = !isOpen")
+    slot(name="currentOption")
+      | {{ defaultOption }}
+
+  ul.dropdown__items
+    li(v-for="option in options" :key="option.key")
+      button.appearance-none.bg-transparent.w-full.text-left(
+        :data-test="`dropdown-item-${option.key}`"
+        @click="closeDropdown(option.value)"
+        @mouseover="activeItem = option.value"
+      )
+        slot(:option="getOption(option)")
+          | {{ option.value }}
+</template>
+
+<script lang="ts">
+import { defineComponent, onMounted, onUnmounted, ref, Ref, PropType } from 'vue'
+
+export interface IOption {
+  key: string | number
+  value: string
+}
+
+export default defineComponent({
+  props: {
+    currentOption: {
+      type: String,
+      default: 'Select an option'
+    },
+    options: {
+      type: Array as PropType<IOption[]>,
+      required: true
+    }
+  },
+
+  emits: ['on-selected'],
+
+  setup(props, { emit }) {
+    const dropdown: Ref<any> = ref(null)
+    const isOpen: Ref<boolean> = ref(false)
+    const activeItem: Ref<string> = ref('')
+    const selectedItem: Ref<string> = ref('')
+    const defaultOption: Ref<string> = ref(props.currentOption)
+
+    const closeDropdown = (value: string) => {
+      isOpen.value = false
+      emit('on-selected', (defaultOption.value = selectedItem.value = value))
+    }
+
+    const getOption = (option: IOption) => ({
+      ...option,
+      isActive: activeItem.value === option.value,
+      isSelected: selectedItem.value === option.value
+    })
+
+    const onClickOutside = (e: Event) => {
+      if (!(dropdown.value == e.target || dropdown.value.contains(e.target))) isOpen.value = false
+    }
+
+    onMounted(() => window.addEventListener('click', onClickOutside))
+    onUnmounted(() => window.removeEventListener('click', onClickOutside))
+
+    return {
+      isOpen,
+      dropdown,
+      activeItem,
+      defaultOption,
+      getOption,
+      closeDropdown
+    }
+  }
+})
+</script>
+
+<style lang="stylus" scoped>
+.dropdown
+  @apply flex flex-col m-0 relative cursor-pointer
+  max-width 400px
+  &.open
+    &::after
+      top -15px
+      transform rotateX(180deg)
+    .dropdown__items
+      @apply absolute overflow-y-scroll opacity-100 left-1/2
+      max-height 240px
+      left 0
+  &::after
+    @apply bg-contain bg-no-repeat absolute h-full right-0 pointer-events-none transition-all
+    content ""
+    width 32px
+    top 18px
+  &::before
+    @apply left-0 right-0 absolute
+    bottom 3px
+    height 1px
+    content ""
+    background-color #1d1d1f
+
+  &__selected
+    @apply py-3 pr-4 pl-3 bg-transparent capitalize
+
+  &__items
+    @apply absolute z-10 max-h-0 w-full opacity-0 transition-all rounded-xl overflow-hidden order-1 space-y-2
+    top 70px
+    min-width 250px
+    &::-webkit-scrollbar
+      width 8px
+      background #aaa
+      border-radius 0 8px 8px 0
+    &::-webkit-scrollbar-thumb
+      background #ccc
+      border-radius 0 8px 8px 0
+</style>
