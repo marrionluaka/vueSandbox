@@ -32,6 +32,9 @@ const TemplateScope = args => ({
     <Dropdown v-bind="args" @on-selected="val => args.currentOption = val">
       <template #currentOption>
         <span class="block truncate">{{args.currentOption}}</span>
+        <span class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+          <SelectorIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+        </span>
       </template>
 
       <template #default="{ option }">
@@ -48,7 +51,7 @@ const TemplateScope = args => ({
     </Dropdown>
   `,
 
-  components: { Dropdown, CheckIcon },
+  components: { Dropdown, CheckIcon, SelectorIcon },
 
   setup() {
     return { args }
@@ -57,6 +60,6 @@ const TemplateScope = args => ({
 
 export const WithSlotScope = TemplateScope.bind({})
 WithSlotScope.args = {
-  currentOption: "Hello I'm an Option!",
+  currentOption: 'Select a custom option',
   options: [...Array(15)].map((x, i) => ({ key: i, value: `Option ${i + 1}` }))
 }
