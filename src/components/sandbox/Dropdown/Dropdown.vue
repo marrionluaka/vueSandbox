@@ -46,7 +46,9 @@ export default defineComponent({
 
     const closeDropdown = (value: string) => {
       isOpen.value = false
-      emit('on-selected', (defaultOption.value = selectedItem.value = value))
+      selectedItem.value = value
+      defaultOption.value = value
+      emit('on-selected', value)
     }
 
     const getOption = (option: IOption) => ({

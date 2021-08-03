@@ -1,4 +1,5 @@
 import Dropdown from './Dropdown.vue'
+import { CheckIcon, SelectorIcon } from '@heroicons/vue/solid'
 
 export default {
   title: 'Example/Dropdown',
@@ -34,12 +35,20 @@ const TemplateScope = args => ({
       </template>
 
       <template #default="{ option }">
-        <div>{{ option.value }} - custom </div>
+        <div :class="[option.isActive ? 'text-white bg-indigo-600' : 'text-gray-900', 'select-none relative py-2 pl-3 pr-9']">
+          <span :class="[option.isSelected ? 'font-semibold' : 'font-normal', 'block truncate']">
+            {{ option.value }}
+          </span>
+
+          <span v-if="option.isSelected" :class="[option.isActive ? 'text-white' : 'text-indigo-600', 'absolute inset-y-0 right-0 flex items-center pr-4']">
+            <CheckIcon class="h-5 w-5" aria-hidden="true" />
+          </span>
+        </div>
       </template>
     </Dropdown>
   `,
 
-  components: { Dropdown },
+  components: { Dropdown, CheckIcon },
 
   setup() {
     return { args }
