@@ -1,6 +1,6 @@
 <template lang="pug">
 div(class="max-w-xl" data-test="tweet")
-  form(@submit.prevent="onSubmit")
+  form(@submit.prevent="$emit('on-tweet', tweetBox)")
     .flex.justify-items-end.rounded-md.border.p-3.mb-2
       textarea.w-full.resize-none.outline-none.border-0.mr-2(rows="4" role="textbox" data-test="tweet-box" v-model="tweetBox")
       .flex.flex-col.justify-between
@@ -33,17 +33,15 @@ export default defineComponent({
 
   emits: ['on-tweet'],
 
-  setup(props, { emit }) {
+  setup(props) {
     const tweetBox: Ref<any> = ref(null)
     const tweetLimit: Ref<number> = ref(props.charLimit)
-
-    const onSubmit = () => emit('on-tweet', tweetBox.value)
     const calcTweetLimit = (tweet: string) => props.charLimit - tweet.length
 
     watch(tweetBox, () => (tweetLimit.value = calcTweetLimit(tweetBox.value)))
     const isDisabled: ComputedRef<any> = computed(() => tweetLimit.value < 0 || !tweetBox.value)
 
-    return { tweetBox, tweetLimit, isDisabled, onSubmit }
+    return { tweetBox, tweetLimit, isDisabled }
   }
 })
 </script>

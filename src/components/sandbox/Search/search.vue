@@ -1,11 +1,11 @@
 <template lang="pug">
-form(@submit.prevent="onSubmit")
+form(@submit.prevent="$emit('on-search', searchInput)")
   .search(class="sm:max-w-xs")
     input.search-input(
-      v-model="searchInput",
-      placeholder="Search...",
-      type="text",
+      type="text"
+      v-model="searchInput"
       data-test="search"
+      placeholder="Search..."
       class="focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
     )
     button.search-btn(class="hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" type="submit" data-test="submit") Search
@@ -19,11 +19,9 @@ export default defineComponent({
 
   emits: ['on-search'],
 
-  setup(_, { emit }) {
+  setup() {
     const searchInput: Ref<any> = ref(null)
-    const onSubmit = () => emit('on-search', searchInput.value)
-
-    return { onSubmit, searchInput }
+    return { searchInput }
   }
 })
 </script>

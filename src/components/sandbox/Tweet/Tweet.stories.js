@@ -9,7 +9,7 @@ export default {
 }
 
 const Template = args => ({
-  template: '<Tweet v-bind="args" />',
+  template: '<Tweet v-bind="args" @on-tweet="args.onSubmit" />',
 
   components: { Tweet },
 

@@ -9,7 +9,7 @@ export default {
 }
 
 const Template = args => ({
-  template: '<Search v-bind="args" />',
+  template: '<Search @on-search="args.onSubmit" />',
 
   components: { Search },
 
