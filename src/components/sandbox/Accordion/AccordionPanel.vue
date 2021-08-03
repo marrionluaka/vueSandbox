@@ -1,6 +1,7 @@
 <template lang="pug">
 .accordion-panel(:class="{ active: isOpen }" data-test="accordion-panel")
-  slot
+  .p-2
+    slot
 </template>
 
 <script lang="ts">
@@ -20,5 +21,5 @@ export default defineComponent({
 .accordion-panel
   @apply p-0 max-h-0 overflow-hidden transition-all ease-in-out
   &.active
-    @apply p-2 max-h-screen transition-all
+    @apply max-h-screen transition-all
 </style>
