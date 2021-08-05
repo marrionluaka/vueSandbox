@@ -1,23 +1,41 @@
 <template lang="pug">
-form(@submit.prevent="$emit('on-search', searchInput)")
-  .search(class="sm:max-w-xs")
-    input.search-input(
-      type="text"
-      v-model="searchInput"
-      data-test="search"
-      placeholder="Search..."
-      class="focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-    )
-    button.search-btn(class="hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm" type="submit" data-test="submit") Search
+.search(class="sm:max-w-xs")
+  input.search-input(
+    type="text"
+    v-model="searchInput"
+    data-test="search"
+    placeholder="Search..."
+    class="focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    @keydown="$emit('keydown', $event.target.value)"
+    @keydown.enter.prevent
+  )
+
+  div(data-test="search-results")
+    ul(v-if="suggestedResults.length")
+      li(v-if="searchInput")
+        SearchAction(@click="$emit('on-search', searchInput)" data-test="submit")
+          span Search "{{ searchInput }}" in items
+
+      slot
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue'
+import { defineComponent, PropType, ref, Ref } from 'vue'
+import SearchAction from './SearchAction.vue'
 
 export default defineComponent({
   name: 'Search',
 
-  emits: ['on-search'],
+  components: { SearchAction },
+
+  props: {
+    suggestedResults: {
+      type: Array as PropType<any>,
+      default: []
+    }
+  },
+
+  emits: ['on-search', 'keydown'],
 
   setup() {
     const searchInput: Ref<any> = ref(null)
