@@ -6,7 +6,7 @@ describe('Accordion spec', () => {
 
   beforeEach(() => {
     wrapper = mount<any>(Accordion, {
-      propsData: {
+      props: {
         isOpen: true
       },
       slots: {

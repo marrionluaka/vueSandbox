@@ -6,7 +6,7 @@ describe('Tweet spec', () => {
 
   beforeEach(() => {
     wrapper = mount<any>(Tweet, {
-      propsData: {
+      props: {
         charLimit: 140
       }
     })
@@ -25,7 +25,7 @@ describe('Tweet spec', () => {
 
   it('disables the submit button when the user has typed past the character limit.', async () => {
     wrapper = mount<any>(Tweet, {
-      propsData: {
+      props: {
         charLimit: 5
       }
     })

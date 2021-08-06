@@ -6,7 +6,7 @@ describe('Dropdown', () => {
 
   const createWrapper = (opts: any = {}) => {
     wrapper = mount<any>(Dropdown, {
-      propsData: {
+      props: {
         currentOption: 'Option one',
         options: [
           { key: 1, value: 'Option 1' },

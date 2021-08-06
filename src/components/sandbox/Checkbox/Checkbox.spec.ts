@@ -6,7 +6,7 @@ describe('Checkbox spec', () => {
 
   beforeEach(() => {
     wrapper = mount<any>(Checkbox, {
-      propsData: {
+      props: {
         id: 'country',
         name: 'canada',
         value: 'CA'

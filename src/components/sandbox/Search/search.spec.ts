@@ -6,7 +6,7 @@ describe('Search specs', () => {
 
   beforeEach(() => {
     wrapper = mount<any>(Search, {
-      propsData: {
+      props: {
         suggestedResults: [
           { id: 1, value: 'Result 1' },
           { id: 2, value: 'Result 2' },
@@ -24,6 +24,7 @@ describe('Search specs', () => {
   })
 
   it('performs a search', async () => {
+    await wrapper.find('[data-test="search"]').trigger('focus')
     await wrapper.find("[data-test='search']").setValue('google search')
     await wrapper.find("[data-test='submit']").trigger('click')
 
@@ -47,7 +48,61 @@ describe('Search specs', () => {
 
   it('displays suggested results', async () => {
     //new RegExp("^(" + this.term + ")", "i")
+    await wrapper.find('[data-test="search"]').trigger('focus')
+    await wrapper.find('[data-test="search"]').setValue('t')
+
     expect(wrapper.html()).toContain('Result 1')
     expect(wrapper.find('[data-test="search-results"]').exists()).toBe(true)
+  })
+
+  it('adds an overlay on focus', async () => {
+    await wrapper.find('[data-test="search"]').trigger('focus')
+    expect(wrapper.find('[data-test="search-overlay"]').exists()).toBe(true)
+  })
+
+  it('updates the search icon on focus', async () => {
+    expect(wrapper.find('[data-test="search-magnifying-glass"]').exists()).toBe(true)
+    expect(wrapper.find('[data-test="search-arrow"]').exists()).toBe(false)
+
+    await wrapper.find('[data-test="search"]').trigger('focus')
+
+    expect(wrapper.find('[data-test="search-magnifying-glass"]').exists()).toBe(false)
+    expect(wrapper.find('[data-test="search-arrow"]').exists()).toBe(true)
+  })
+
+  it('displays an "X" button on keydown', async () => {
+    await wrapper.find('[data-test="search"]').setValue('t')
+    expect(wrapper.find('[data-test="search-close"]').exists()).toBe(true)
+  })
+
+  it('clears the search', async () => {
+    await wrapper.find('[data-test="search"]').trigger('focus')
+    await wrapper.find('[data-test="search"]').setValue('s')
+    await wrapper.find('[data-test="search-close"]').trigger('click')
+
+    expect(wrapper.find('[data-test="search-magnifying-glass"]').exists()).toBe(true)
+    expect(wrapper.find('[data-test="search-overlay"]').exists()).toBe(false)
+    expect(wrapper.find('[data-test="search-arrow"]').exists()).toBe(false)
+    expect(wrapper.find('[data-test="search"]').element.value).toBe('')
+  })
+
+  it('removes active state on blur', async () => {
+    await wrapper.find('[data-test="search"]').trigger('focus')
+    expect(wrapper.find('[data-test="search-magnifying-glass"]').exists()).toBe(false)
+    expect(wrapper.find('[data-test="search-overlay"]').exists()).toBe(true)
+    expect(wrapper.find('[data-test="search-arrow"]').exists()).toBe(true)
+
+    await wrapper.find('[data-test="search"]').trigger('blur')
+    expect(wrapper.find('[data-test="search-magnifying-glass"]').exists()).toBe(true)
+    expect(wrapper.find('[data-test="search-overlay"]').exists()).toBe(false)
+    expect(wrapper.find('[data-test="search-arrow"]').exists()).toBe(false)
+  })
+
+  it.skip('hides search results on blur', async () => {
+    await wrapper.find('[data-test="search"]').trigger('focus')
+    await wrapper.find('[data-test="search"]').setValue('t')
+    await wrapper.find('[data-test="search"]').trigger('blur')
+
+    expect(wrapper.find('[data-test="search-results"]').exists()).toBe(false)
   })
 })

@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import Accordion from './Accordion.vue'
-import ChevronIcon from './ChevronIcon.vue'
+import { ChevronIcon } from '../shared'
 import AccordionTitle from './AccordionTitle.vue'
 import AccordionPanel from './AccordionPanel.vue'
 

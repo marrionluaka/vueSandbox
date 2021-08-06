@@ -6,7 +6,7 @@ describe('Stars spec', () => {
 
   beforeEach(() => {
     wrapper = mount<any>(Stars, {
-      propsData: {
+      props: {
         color: 'golden',
         ratings: 5
       }

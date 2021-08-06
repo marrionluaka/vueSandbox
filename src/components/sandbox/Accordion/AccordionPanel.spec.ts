@@ -6,7 +6,7 @@ describe('AccordionPanel spec', () => {
 
   beforeEach(() => {
     wrapper = mount<any>(AccordionPanel, {
-      propsData: {
+      props: {
         isOpen: true
       },
       slots: {

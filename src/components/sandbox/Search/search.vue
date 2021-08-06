@@ -1,32 +1,47 @@
 <template lang="pug">
-.search(class="sm:max-w-xs")
-  input.search-input(
-    type="text"
-    v-model="searchInput"
-    data-test="search"
-    placeholder="Search..."
-    class="focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-    @keydown="$emit('keydown', $event.target.value)"
-    @keydown.enter.prevent
-  )
+.search(class="sm:max-w-sm")
+  .search-overlay(v-if="isSearchActive" data-test="search-overlay")
+  .search-input.flex.items-center(class="focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")
+    .transform.scale-75.text-gray-500
+      ArrowLeftIcon.transform.scale-90(v-if="isSearchActive" data-test="search-arrow")
+      SearchIcon.transform.scale-90(v-else data-test="search-magnifying-glass")
+    input.border-0.bg-transparent.p-0.pl-2.w-full.text-sm(
+      type="text"
+      v-model="searchInput"
+      data-test="search"
+      placeholder="Search..."
+      class="focus:ring-0"
+      @focus="isSearchActive = true"
+      @blur="isSearchActive = false"
+      @keydown="$emit('keydown', $event.target.value)"
+      @keydown.enter.prevent
+    )
+    button.bg-gray-500.text-white.rounded-full.ml-2.transform.scale-75.apprearance-none(data-test="search-close" @click="clearSearch")
+      CloseIcon.search-close(v-if="searchInput")
 
-  div(data-test="search-results")
-    ul(v-if="suggestedResults.length")
-      li(v-if="searchInput")
+  .bg-gray-100.shadow.rounded-b-md(data-test="search-results")
+    ul.space-y-2.py-2(v-if="searchInput && suggestedResults.length")
+      li
         SearchAction(@click="$emit('on-search', searchInput)" data-test="submit")
-          span Search "{{ searchInput }}" in items
-
+          .flex.justify-between.items-center
+            .flex.items-center
+              .mr-2.my-1.p-2.border.rounded-full.border-gray-200
+                BookIcon.text-gray-500
+              p.text-sm Search "{{ searchInput }}" in items
+            ChevronIconRight.transform.scale-75.text-gray-500
       slot
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType, ref, Ref } from 'vue'
+
+import { BookIcon, SearchIcon, CloseIcon, ArrowLeftIcon, ChevronIconRight } from '../shared'
 import SearchAction from './SearchAction.vue'
 
 export default defineComponent({
   name: 'Search',
 
-  components: { SearchAction },
+  components: { SearchAction, BookIcon, ChevronIconRight, SearchIcon, CloseIcon, ArrowLeftIcon },
 
   props: {
     suggestedResults: {
@@ -39,16 +54,27 @@ export default defineComponent({
 
   setup() {
     const searchInput: Ref<any> = ref(null)
-    return { searchInput }
+    const isSearchActive: Ref<boolean> = ref(false)
+    const clearSearch = () => {
+      searchInput.value = ''
+      isSearchActive.value = false
+    }
+
+    return { searchInput, isSearchActive, clearSearch }
   }
 })
 </script>
 
 <style lang="stylus" scoped>
 .search
-  @apply w-full flex items-center
+  @apply w-full flex flex-col
+  &-overlay
+    @apply w-screen h-screen absolute inset-0 bg-white bg-opacity-50
+    z-index -1
   &-input
-    @apply shadow-sm block w-full border-gray-300 px-4 rounded-full
+    @apply shadow w-full border-gray-300 px-4 rounded-md h-11
+  &-close
+    @apply transform scale-75
   &-btn
     @apply ml-2 inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-full text-white bg-indigo-600
 </style>
