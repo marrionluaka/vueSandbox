@@ -1,6 +1,6 @@
 <template lang="pug">
-.dropdown(ref="dropdown" data-test="dropdown" :class="{ open: isActive }")
-  .dropdown__selected(data-test="dropdown-selected" @click="isActive = !isActive")
+.dropdown(ref="dropdown" data-test="dropdown" :class="{ open: isOpen }")
+  .dropdown__selected(data-test="dropdown-selected" @click="isOpen = !isOpen")
     slot(name="currentOption")
       | {{ defaultOption }}
 
@@ -16,8 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, Ref, PropType } from 'vue'
-import { useClickOutside } from '../../../hooks/useClickOutside'
+import { defineComponent, onMounted, onUnmounted, ref, Ref, PropType } from 'vue'
 
 export interface IOption {
   key: string | number
@@ -40,13 +39,13 @@ export default defineComponent({
 
   setup(props, { emit }) {
     const dropdown: Ref<any> = ref(null)
+    const isOpen: Ref<boolean> = ref(false)
     const activeItem: Ref<string> = ref('')
     const selectedItem: Ref<string> = ref('')
     const defaultOption: Ref<string> = ref(props.currentOption)
-    const { isActive } = useClickOutside(dropdown)
 
     const closeDropdown = (value: string) => {
-      isActive.value = false
+      isOpen.value = false
       selectedItem.value = value
       defaultOption.value = value
       emit('on-selected', value)
@@ -58,8 +57,15 @@ export default defineComponent({
       isSelected: selectedItem.value === option.value
     })
 
+    const onClickOutside = (e: Event) => {
+      if (!(dropdown.value == e.target || dropdown.value.contains(e.target))) isOpen.value = false
+    }
+
+    onMounted(() => window.addEventListener('click', onClickOutside))
+    onUnmounted(() => window.removeEventListener('click', onClickOutside))
+
     return {
-      isActive,
+      isOpen,
       dropdown,
       activeItem,
       defaultOption,
