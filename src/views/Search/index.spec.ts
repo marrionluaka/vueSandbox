@@ -1,17 +1,36 @@
 import { mount } from '@vue/test-utils'
-import Search from './index.vue'
+
+import SearchPage from './index.vue'
+
+jest.mock('../../api/book-api', () => ({
+  getAllBooks: jest.fn().mockResolvedValue([
+    {
+      id: 1,
+      title: 'Atomic Habits',
+      description: 'Lorem ipsum dolor sit amet.',
+      rating: 9.5,
+      src: 'http://atomic-habits.com'
+    }
+  ])
+}))
 
 describe('Search page', () => {
   let wrapper: any
 
   beforeEach(() => {
-    wrapper = mount(Search)
+    wrapper = mount(SearchPage)
   })
 
   afterEach(() => wrapper?.unmount())
 
-  it.todo('renders the search page')
-  it.todo('displays initial search results on page load')
+  it('renders the search page', () => {
+    expect(wrapper.find('[data-test="search-page"]').exists()).toBe(true)
+  })
+
+  it('displays initial search results on page load', () => {
+    expect(wrapper.find('[data-test="search-page-results"]').html()).toContain('Atomic Habits')
+  })
   it.todo('displays new search results on search submit')
+  // await wrapper.findComponent({ name: 'Search' }).vm.$emit('on-search', 'Elon')
   it.todo('displays suggested search results')
 })

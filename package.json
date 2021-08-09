@@ -14,6 +14,7 @@
     "@headlessui/vue": "1.4.0",
     "@heroicons/vue": "1.0.2",
     "@tailwindcss/forms": "0.3.3",
+    "axios": "0.21.1",
     "miragejs": "0.1.41",
     "storypug": "1.0.0-rc.8",
     "tslib": "2.3.0",
