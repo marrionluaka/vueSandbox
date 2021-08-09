@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 
-import { INTERCOM } from './routes'
+import { INTERCOM, SEARCH } from './routes'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -12,6 +12,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/intercom',
     name: INTERCOM,
     component: () => import('@/views/Intercom.vue')
+  },
+  {
+    path: '/search',
+    name: SEARCH,
+    component: () => import('@/views/Search.vue')
   }
 ]
 
