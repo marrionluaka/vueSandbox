@@ -33,6 +33,6 @@ describe('Search page', () => {
     expect(wrapper.find('[data-test="search-page-results"]').html()).toContain('Atomic Habits')
   })
   it.todo('displays new search results on search submit')
-  // await wrapper.findComponent({ name: 'Search' }).vm.$emit('on-search', 'Elon')
+  // await wrapper.findComponent({ name: 'Search' }).vm.$emit('on-search', 'Elons')
   it.todo('displays suggested search results')
 })
