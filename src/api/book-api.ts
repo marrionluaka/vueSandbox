@@ -1,17 +1,14 @@
-import defaultAxios from 'axios'
+export default function(axios: any) {
+  return Object.freeze({
+    getAllBooks
+  })
 
-const axios = defaultAxios.create({
-  baseURL: '/api/',
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})
-
-export const getAllBooks = async () => {
-  try {
-    const { data } = await axios.get('books')
-    return data
-  } catch (e) {
-    throw new Error('Cannot execute getAllBooks API')
+  async function getAllBooks() {
+    try {
+      const { data } = await axios.get('books')
+      return data
+    } catch (e) {
+      throw new Error('Cannot execute getAllBooks API')
+    }
   }
 }

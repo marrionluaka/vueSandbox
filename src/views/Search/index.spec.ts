@@ -2,16 +2,18 @@ import { mount } from '@vue/test-utils'
 
 import SearchPage from './index.vue'
 
-jest.mock('../../api/book-api', () => ({
-  getAllBooks: jest.fn().mockResolvedValue([
-    {
-      id: 1,
-      title: 'Atomic Habits',
-      description: 'Lorem ipsum dolor sit amet.',
-      rating: 9.5,
-      src: 'http://atomic-habits.com'
-    }
-  ])
+jest.mock('../../api', () => ({
+  bookService: {
+    getAllBooks: jest.fn().mockResolvedValue([
+      {
+        id: 1,
+        title: 'Atomic Habits',
+        description: 'Lorem ipsum dolor sit amet.',
+        rating: 9.5,
+        src: 'http://atomic-habits.com'
+      }
+    ])
+  }
 }))
 
 describe('Search page', () => {

@@ -7,14 +7,14 @@ div(data-test="search-page")
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, Ref } from 'vue'
-import { getAllBooks } from '../../api/book-api'
+import { bookService } from '../../api'
 
 export default defineComponent({
   setup() {
     const searchResuls: Ref<any[]> = ref([])
 
     onMounted(async () => {
-      const books = await getAllBooks()
+      const books = await bookService.getAllBooks()
       searchResuls.value = books
     })
 
