@@ -1,14 +1,14 @@
 export default function(axios: any) {
   return Object.freeze({
-    getAllBooks
+    getBooks
   })
 
-  async function getAllBooks() {
+  async function getBooks(search: string = '') {
     try {
-      const { data } = await axios.get('books')
+      const { data } = await axios.get(`books?q=${search}`)
       return data
     } catch (e) {
-      throw new Error('Cannot execute getAllBooks API')
+      throw new Error('Cannot execute getBooks API')
     }
   }
 }
