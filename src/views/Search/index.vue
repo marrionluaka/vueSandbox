@@ -7,27 +7,27 @@ div(data-test="search-page")
 </template>
 
 <script lang="ts">
-// import { defineComponent, onMounted, ref, Ref } from 'vue'
+import { defineComponent, onMounted, ref, Ref } from 'vue'
 
-// import { bookService } from '../../api'
-// import Search from '../../components/sandbox/Search/Search.vue'
+import { bookService } from '../../api'
+import Search from '../../components/sandbox/Search/Search.vue'
 
-// export default defineComponent({
-//   name: 'SearchPage',
+export default defineComponent({
+  name: 'SearchPage',
 
-//   components: { Search },
+  components: { Search },
 
-//   setup() {
-//     const searchResuls: Ref<any[]> = ref([])
+  setup() {
+    const searchResuls: Ref<any[]> = ref([])
 
-//     onMounted(async () => await onSearch())
+    onMounted(async () => await onSearch())
 
-//     const onSearch = async (searchTerm: string = '') => {
-//       const searchResults = await bookService.getBooks(searchTerm)
-//       searchResuls.value = searchResults
-//     }
+    const onSearch = async (searchTerm: string = '') => {
+      const searchResults = await bookService.getBooks(searchTerm)
+      searchResuls.value = searchResults
+    }
 
-//     return { searchResuls, onSearch }
-//   }
-// })
+    return { searchResuls, onSearch }
+  }
+})
 </script>
