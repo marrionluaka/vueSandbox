@@ -5,7 +5,7 @@ describe('Search specs', () => {
   let wrapper: any
 
   beforeEach(() => {
-    wrapper = mount<any>(Search, {
+    wrapper = mount(Search, {
       props: {
         suggestedResults: [
           { id: 1, value: 'Result 1' },
@@ -47,7 +47,6 @@ describe('Search specs', () => {
   })
 
   it('displays suggested results', async () => {
-    //new RegExp("^(" + this.term + ")", "i")
     await wrapper.find('[data-test="search"]').trigger('focus')
     await wrapper.find('[data-test="search"]').setValue('t')
 

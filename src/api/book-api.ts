@@ -3,8 +3,9 @@ export default function(axios: any) {
     getBooks
   })
 
-  async function getBooks(search: string = '') {
+  async function getBooks(search: string = ''): Promise<any[]> {
     try {
+      //new RegExp("^(" + this.term + ")", "i")
       const { data } = await axios.get(`books?q=${search}`)
       return data
     } catch (e) {
