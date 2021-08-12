@@ -1,6 +1,7 @@
 import { mount } from '@vue/test-utils'
 import SearchPage from './index.vue'
 
+jest.mock('lodash', () => ({ debounce: jest.fn(fn => fn) }))
 jest.mock('../../api', () => ({
   bookService: {
     getBooks: (searchTerm: string) =>
@@ -78,6 +79,7 @@ describe('Search page', () => {
 
     await wrapper.find('[data-test="search"]').setValue('e')
     await wrapper.find('[data-test="search"]').trigger('keydown')
+
     await wrapper.vm.$nextTick()
 
     expect(wrapper.find('[data-test="search-suggested-results"]').exists()).toBe(true)

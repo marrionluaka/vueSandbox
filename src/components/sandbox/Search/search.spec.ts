@@ -1,6 +1,8 @@
 import { mount } from '@vue/test-utils'
 import Search from './Search.vue'
 
+jest.mock('lodash', () => ({ debounce: jest.fn(fn => fn) }))
+
 describe('Search specs', () => {
   let wrapper: any
 
@@ -35,6 +37,7 @@ describe('Search specs', () => {
   it('emits a "keydown" event for each key stroke', async () => {
     await wrapper.find('[data-test="search"]').setValue('cat')
     await wrapper.find('[data-test="search"]').trigger('keydown')
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.emitted('keydown')[0][0]).toBe('cat')
   })

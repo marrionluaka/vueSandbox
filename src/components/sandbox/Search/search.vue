@@ -3,9 +3,9 @@
   .search-overlay(v-if="isSearchActive" data-test="search-overlay")
   .search-input.flex.items-center(class="focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm")
     .transform.scale-75.text-gray-500
-      ArrowLeftIcon.transform.scale-90(v-if="isSearchActive" data-test="search-arrow")
-      SearchIcon.transform.scale-90(v-else data-test="search-magnifying-glass")
-    input.border-0.bg-transparent.p-0.pl-2.w-full.text-sm(
+      ArrowLeftIcon.search-input-icons(v-if="isSearchActive" data-test="search-arrow")
+      SearchIcon.search-input-icons(v-else data-test="search-magnifying-glass")
+    input.search-input-component(
       type="text"
       v-model="searchInput"
       data-test="search"
@@ -13,13 +13,13 @@
       class="focus:ring-0"
       @focus="isSearchActive = true"
       @blur="isSearchActive = false"
-      @keydown="$emit('keydown', $event.target.value)"
+      @keydown="onKeydown"
       @keydown.enter.prevent
     )
-    button.bg-gray-500.text-white.rounded-full.ml-2.transform.scale-75.apprearance-none(data-test="search-close" @click="clearSearch")
+    button.search-btn.apprearance-none(data-test="search-close" @click="clearSearch")
       CloseIcon.search-close(v-if="searchInput")
 
-  .bg-gray-100.shadow.rounded-b-md(data-test="search-results")
+  .search-results(data-test="search-results")
     ul.space-y-2.py-2(v-if="searchInput && suggestedResults.length")
       li
         SearchAction(@click="$emit('on-search', searchInput)" data-test="submit")
@@ -33,6 +33,7 @@
 </template>
 
 <script lang="ts">
+import { debounce } from 'lodash'
 import { defineComponent, PropType, ref, Ref } from 'vue'
 
 import { BookIcon, SearchIcon, CloseIcon, ArrowLeftIcon, ChevronIconRight } from '../shared'
@@ -52,7 +53,7 @@ export default defineComponent({
 
   emits: ['on-search', 'keydown'],
 
-  setup() {
+  setup(_, { emit }) {
     const searchInput: Ref<any> = ref(null)
     const isSearchActive: Ref<boolean> = ref(false)
     const clearSearch = () => {
@@ -60,7 +61,9 @@ export default defineComponent({
       isSearchActive.value = false
     }
 
-    return { searchInput, isSearchActive, clearSearch }
+    const onKeydown = debounce((e: any) => emit('keydown', e.target.value), 400)
+
+    return { searchInput, isSearchActive, onKeydown, clearSearch }
   }
 })
 </script>
@@ -73,8 +76,14 @@ export default defineComponent({
     z-index -1
   &-input
     @apply shadow w-full border-gray-300 px-4 rounded-md h-11
+    &-icons
+      @apply transform scale-90
+    &-component
+      @apply border-0 bg-transparent p-0 pl-2 w-full text-sm
   &-close
     @apply transform scale-75
   &-btn
-    @apply ml-2 inline-flex items-center justify-center px-4 py-2 border border-transparent shadow-sm font-medium rounded-full text-white bg-indigo-600
+    @apply bg-gray-500 text-white rounded-full ml-2 transform scale-75
+  &-results
+    @apply bg-gray-100 shadow rounded-b-md
 </style>
