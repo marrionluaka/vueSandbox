@@ -25,7 +25,7 @@ export const Primary = Template.bind({})
 
 const WithSuggestedResultsTemplate = args => ({
   template: `
-    <Search v-bind="args" @on-search="args.onSubmit">
+    <Search v-bind="args" @on-search="args.onSubmit" @keydown="onKeydown">
       <li class="bg-white">
         <div class="flex items-center justify-between p-3 border-b border-gray-200">
           <p class="font-medium capitalize">Title</p>
@@ -64,33 +64,38 @@ const WithSuggestedResultsTemplate = args => ({
   components: { Search, SearchItem, SearchAction, ChevronIconRight },
 
   setup() {
-    return { args }
+    const onKeydown = () => {
+      setTimeout(() => {
+        args.suggestedResults = [
+          {
+            id: 1,
+            title: 'Result 1',
+            description: 'Lorem ipsum dolor sit amet.',
+            rating: 9.5,
+            src: 'http://google.com'
+          },
+          {
+            id: 2,
+            title: 'Result 2',
+            description: 'Lorem ipsum dolor sit amet.',
+            rating: 8.7,
+            src: 'http://google.com'
+          },
+          {
+            id: 3,
+            title: 'Result 3',
+            description: 'Lorem ipsum dolor sit amet.',
+            rating: 9.7,
+            src: 'http://google.com'
+          }
+        ]
+      }, 1000)
+    }
+    return { args, onKeydown }
   }
 })
 
 export const WithSuggestedResults = WithSuggestedResultsTemplate.bind({})
 WithSuggestedResults.args = {
-  suggestedResults: [
-    {
-      id: 1,
-      title: 'Result 1',
-      description: 'Lorem ipsum dolor sit amet.',
-      rating: 9.5,
-      src: 'http://google.com'
-    },
-    {
-      id: 2,
-      title: 'Result 2',
-      description: 'Lorem ipsum dolor sit amet.',
-      rating: 8.7,
-      src: 'http://google.com'
-    },
-    {
-      id: 3,
-      title: 'Result 3',
-      description: 'Lorem ipsum dolor sit amet.',
-      rating: 9.7,
-      src: 'http://google.com'
-    }
-  ]
+  suggestedResults: []
 }

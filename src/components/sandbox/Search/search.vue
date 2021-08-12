@@ -19,8 +19,8 @@
     button.search-btn.apprearance-none(data-test="search-close" @click="clearSearch")
       CloseIcon.search-close(v-if="searchInput")
 
-  .search-results(data-test="search-results")
-    ul.space-y-2.py-2(v-if="searchInput && suggestedResults.length")
+  .search-results(data-test="search-results" :class="{ loading: searchInput && !suggestedResults.length }")
+    ul.space-y-2.py-2(v-if="searchInput")
       li
         SearchAction(@click="$emit('on-search', searchInput)" data-test="submit")
           .flex.justify-between.items-center

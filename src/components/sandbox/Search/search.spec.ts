@@ -100,6 +100,22 @@ describe('Search specs', () => {
     expect(wrapper.find('[data-test="search-arrow"]').exists()).toBe(false)
   })
 
+  it('displays a loading indicator', async () => {
+    await wrapper.setProps({ suggestedResults: [] })
+    await wrapper.find('[data-test="search"]').setValue('s')
+    await wrapper.find('[data-test="search"]').trigger('keydown')
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('[data-test="search-results"]').classes()).toContain('loading')
+
+    await wrapper.setProps({ suggestedResults: [{ id: 1, value: 'Result 1' }] })
+    await wrapper.find('[data-test="search"]').setValue('su')
+    await wrapper.find('[data-test="search"]').trigger('keydown')
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('[data-test="search-results"]').classes()).not.toContain('loading')
+  })
+
   it.skip('hides search results on blur', async () => {
     await wrapper.find('[data-test="search"]').trigger('focus')
     await wrapper.find('[data-test="search"]').setValue('t')
