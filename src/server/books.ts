@@ -42,11 +42,13 @@ export default function(server: any) {
     },
 
     routes() {
-      this.get('/api/books', ({ books }: any, req: any) => {
+      this.namespace = 'api'
+
+      this.get('books', ({ books }: any, req: any) => {
         const filteredBooks = books.where(containsSearchTerm(req.queryParams.q))
         return limit(25, filteredBooks.length ? filteredBooks : books.all())
       })
-      this.get('/api/books/categories', (schema: any) => {
+      this.get('books/categories', (schema: any) => {
         return schema.categories.all()
       })
     }
