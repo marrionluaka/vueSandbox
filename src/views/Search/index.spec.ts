@@ -44,6 +44,22 @@ jest.mock('../../api', () => ({
         }
 
         return resolve(books.filter(getBooks(searchTerm)))
+      }),
+    getCategories: () =>
+      new Promise((resolve, _) => {
+        const categories = [
+          {
+            id: 1,
+            name: 'Genre',
+            options: [{ name: 'Romance', value: 'romance' }]
+          },
+          {
+            id: 2,
+            name: 'Author',
+            options: [{ name: 'JK Rowling', value: 'jk-rowling' }]
+          }
+        ]
+        return resolve(categories)
       })
   }
 }))
@@ -85,4 +101,15 @@ describe('Search page', () => {
     expect(wrapper.find('[data-test="search-suggested-results"]').exists()).toBe(true)
     expect(wrapper.find('[data-test="search-suggested-results"]').html()).toContain(title)
   })
+
+  it('loads all categories', () => {
+    const searchPageCategories = wrapper.find('[data-test="search-page-categories"]').html()
+
+    expect(searchPageCategories).toContain('Author')
+    expect(searchPageCategories).toContain('Genre')
+    expect(searchPageCategories).toContain('Romance')
+    expect(searchPageCategories).toContain('JK Rowling')
+  })
+
+  it.todo('updates the search results on category selection')
 })

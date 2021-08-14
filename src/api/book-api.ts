@@ -1,6 +1,7 @@
 export default function(axios: any) {
   return Object.freeze({
-    getBooks
+    getBooks,
+    getCategories
   })
 
   async function getBooks(search: string = ''): Promise<any[]> {
@@ -11,6 +12,17 @@ export default function(axios: any) {
       return books
     } catch (e) {
       throw new Error('Cannot execute getBooks API')
+    }
+  }
+
+  async function getCategories() {
+    try {
+      const {
+        data: { categories }
+      } = await axios.get('books/categories')
+      return categories
+    } catch (e) {
+      throw new Error('Cannot execute getCategories API')
     }
   }
 }

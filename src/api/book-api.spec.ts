@@ -23,4 +23,19 @@ describe('bookApi specs', () => {
 
     expect(data).toEqual(books)
   })
+
+  it('returns a list of categories', async () => {
+    const categories = [
+      {
+        id: 1,
+        name: 'Genre',
+        options: [{ name: 'Romance', value: 'romance' }]
+      }
+    ]
+    const api = bookApi({ get: jest.fn().mockResolvedValue({ data: { categories } }) })
+
+    const data = await api.getCategories()
+
+    expect(data).toEqual(categories)
+  })
 })

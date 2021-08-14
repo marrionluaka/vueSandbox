@@ -1,22 +1,26 @@
-import { pipe, map, uniq, forEach, slice, curry } from 'ramda'
+import { pipe, pluck, uniq, forEach, slice, curry, takeLast } from 'ramda'
 // @ts-ignore
 import { Factory, Model, hasMany } from 'miragejs'
 // @ts-ignore
 import faker from 'faker'
 import booksDb from './books-db.json'
 
-const getUniqGenres = pipe(
-  map((x: any) => x.genre),
-  uniq
-)
-
-const limit = curry((lim, arr) => slice(0, lim, arr))
-
-const getRating = (min: number, max: number): number => parseFloat((Math.random() * (max - min + 1) + min).toFixed(1))
-
-const containsSearchTerm = curry((searchTerm: string, book: any) => book.title.toLowerCase().includes(searchTerm))
-
 export default function(server: any) {
+  const xx = ['author', 'genre', 'volume_sales', 'publisher', 'publication_date', 'imprint']
+  const limit = curry((lim, arr) => slice(0, lim, arr))
+
+  const getUniqCategory = (books: any, categoryName: string) => pipe(pluck(categoryName), uniq)(books)
+
+  const getRating = (min: number, max: number): number => parseFloat((Math.random() * (max - min + 1) + min).toFixed(1))
+
+  const containsSearchTerm = curry((searchTerm: string, book: any): boolean => book.title.toLowerCase().includes(searchTerm))
+
+  const getCategory = curry((books: any, categoryName: string) => ({
+    name: categoryName,
+    type: ['volume_sales', 'publication_date'].includes(categoryName) ? 'range' : 'selection',
+    options: getUniqCategory(books, categoryName)
+  }))
+
   server.config({
     models: {
       category: Model.extend({
@@ -32,13 +36,13 @@ export default function(server: any) {
         src: '#',
         rating: () => getRating(5, 9),
         release_date: () => faker.date.past().toLocaleDateString(),
-        img: () => faker.image.unsplash.imageUrl(640, 480, 'books', 'books')
+        img: () => faker.image.lorempixel.imageUrl(640, 480, 'abstract', true)
       })
     },
 
     seeds() {
       forEach(book => server.create('book', book), booksDb)
-      forEach(category => server.create('category', { category }), getUniqGenres(booksDb))
+      forEach(category => server.create('category', getCategory(booksDb, category)), xx)
     },
 
     routes() {

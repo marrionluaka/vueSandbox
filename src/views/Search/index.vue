@@ -24,7 +24,12 @@
             ChevronIconRight.transform.scale-75.text-gray-500
 
   nav.col-span-full.px-5(class="lg:col-span-3")
-    | I'm a nav
+    ul(data-test="search-page-categories")
+      li(v-for="category in categories" :key="category.id")
+        p.text-2xl.font-bold.capitalize {{ category.name }}
+        ul
+          li(v-for="option in category.options" :key="option")
+            | {{ option }}
 
   main.col-span-full.px-5(class="lg:col-span-9")
     div(data-test="search-page-results")
@@ -52,13 +57,18 @@ export default defineComponent({
   components: { Search, SearchItem, SearchAction, ChevronIconRight },
 
   setup() {
+    const categories: Ref<any[]> = ref([])
     const searchResults: Ref<any[]> = ref([])
     const suggestedResults: Ref<any[]> = ref([])
 
-    onMounted(async () => await onSearch())
+    onMounted(async () => {
+      await onSearch()
+      await getCategories()
+    })
 
     const onSearch = _getBooks((books: any) => (searchResults.value = books))
     const onKeydown = _getBooks((books: any) => (suggestedResults.value = books.slice(0, 3)))
+    const getCategories = async () => (categories.value = await bookService.getCategories())
 
     function _getBooks(fn: any) {
       return async (searchTerm: string = '') => {
@@ -67,7 +77,7 @@ export default defineComponent({
       }
     }
 
-    return { searchResults, suggestedResults, onSearch, onKeydown }
+    return { categories, searchResults, suggestedResults, onSearch, onKeydown }
   }
 })
 </script>
