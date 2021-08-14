@@ -46,6 +46,8 @@ import { defineComponent, onMounted, ref, Ref } from 'vue'
 
 import { bookService } from '../../api'
 
+import { IBook } from '@/entities/book.entity'
+import { ICategory } from '@/entities/category.entity'
 import Search from '../../components/sandbox/Search/Search.vue'
 import { ChevronIconRight } from '../../components/sandbox/shared'
 import SearchItem from '../../components/sandbox/Search/SearchItem.vue'
@@ -57,17 +59,17 @@ export default defineComponent({
   components: { Search, SearchItem, SearchAction, ChevronIconRight },
 
   setup() {
-    const categories: Ref<any[]> = ref([])
-    const searchResults: Ref<any[]> = ref([])
-    const suggestedResults: Ref<any[]> = ref([])
+    const searchResults: Ref<IBook[]> = ref([])
+    const categories: Ref<ICategory[]> = ref([])
+    const suggestedResults: Ref<IBook[]> = ref([])
 
     onMounted(async () => {
       await onSearch()
       await getCategories()
     })
 
-    const onSearch = _getBooks((books: any) => (searchResults.value = books))
-    const onKeydown = _getBooks((books: any) => (suggestedResults.value = books.slice(0, 3)))
+    const onSearch = _getBooks((books: IBook[]) => (searchResults.value = books))
+    const onKeydown = _getBooks((books: IBook[]) => (suggestedResults.value = books.slice(0, 3)))
     const getCategories = async () => (categories.value = await bookService.getCategories())
 
     function _getBooks(fn: any) {

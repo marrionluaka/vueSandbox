@@ -1,10 +1,12 @@
+import { IBook } from '@/entities/book.entity'
+
 export default function(axios: any) {
   return Object.freeze({
     getBooks,
     getCategories
   })
 
-  async function getBooks(search: string = ''): Promise<any[]> {
+  async function getBooks(search: string = ''): Promise<IBook[]> {
     try {
       const {
         data: { books }

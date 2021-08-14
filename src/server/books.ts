@@ -1,25 +1,30 @@
-import { pipe, pluck, uniq, forEach, slice, curry, takeLast } from 'ramda'
+import { pipe, pluck, uniq, forEach, slice, curry } from 'ramda'
 // @ts-ignore
 import { Factory, Model, hasMany } from 'miragejs'
 // @ts-ignore
 import faker from 'faker'
 import booksDb from './books-db.json'
+import { IBook } from '@/entities/book.entity'
+import { ICategory } from '@/entities/category.entity'
 
 export default function(server: any) {
-  const xx = ['author', 'genre', 'volume_sales', 'publisher', 'publication_date', 'imprint']
+  const listOfCategories = ['author', 'genre', 'volume_sales', 'publisher', 'publication_date', 'imprint']
+
   const limit = curry((lim, arr) => slice(0, lim, arr))
 
-  const getUniqCategory = (books: any, categoryName: string) => pipe(pluck(categoryName), uniq)(books)
+  const getUniqCategory = (books: IBook[], categoryName: string) => pipe<any, any, IBook[]>(pluck(categoryName), uniq)(books)
 
   const getRating = (min: number, max: number): number => parseFloat((Math.random() * (max - min + 1) + min).toFixed(1))
 
-  const containsSearchTerm = curry((searchTerm: string, book: any): boolean => book.title.toLowerCase().includes(searchTerm))
+  const containsSearchTerm = curry((searchTerm: string, book: IBook): boolean => book.title.toLowerCase().includes(searchTerm))
 
-  const getCategory = curry((books: any, categoryName: string) => ({
-    name: categoryName,
-    type: ['volume_sales', 'publication_date'].includes(categoryName) ? 'range' : 'selection',
-    options: getUniqCategory(books, categoryName)
-  }))
+  const getCategory = curry(
+    (books: IBook[], categoryName: string): ICategory => ({
+      name: categoryName,
+      type: ['volume_sales', 'publication_date'].includes(categoryName) ? 'range' : 'selection',
+      options: getUniqCategory(books, categoryName)
+    })
+  )
 
   server.config({
     models: {
@@ -42,7 +47,7 @@ export default function(server: any) {
 
     seeds() {
       forEach(book => server.create('book', book), booksDb)
-      forEach(category => server.create('category', getCategory(booksDb, category)), xx)
+      forEach(category => server.create('category', getCategory(booksDb as IBook[], category)), listOfCategories)
     },
 
     routes() {
