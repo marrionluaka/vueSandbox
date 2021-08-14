@@ -8,7 +8,7 @@ describe('bookApi specs', () => {
 
   it('returns books', async () => {
     const books = [{ title: 'some-book' }]
-    const api = bookApi({ get: jest.fn().mockResolvedValue({ data: books }) })
+    const api = bookApi({ get: jest.fn().mockResolvedValue({ data: { books } }) })
 
     const data = await api.getBooks()
 
@@ -17,7 +17,7 @@ describe('bookApi specs', () => {
 
   it('returns books for a specified search term', async () => {
     const books = [{ title: 'Elon Tesla...' }]
-    const api = bookApi({ get: jest.fn().mockResolvedValue({ data: books }) })
+    const api = bookApi({ get: jest.fn().mockResolvedValue({ data: { books } }) })
 
     const data = await api.getBooks('Elon')
 

@@ -5,9 +5,10 @@ export default function(axios: any) {
 
   async function getBooks(search: string = ''): Promise<any[]> {
     try {
-      //new RegExp("^(" + this.term + ")", "i")
-      const { data } = await axios.get(`books?q=${search}`)
-      return data
+      const {
+        data: { books }
+      } = await axios.get(`books?q=${search}`)
+      return books
     } catch (e) {
       throw new Error('Cannot execute getBooks API')
     }

@@ -1,69 +1,53 @@
+import { pipe, map, uniq, forEach, slice, curry } from 'ramda'
 // @ts-ignore
-import { Factory, Model, RestSerializer, hasMany, belongsTo } from 'miragejs'
+import { Factory, Model, hasMany } from 'miragejs'
+// @ts-ignore
+import faker from 'faker'
+import booksDb from './books-db.json'
+
+const getUniqGenres = pipe(
+  map((x: any) => x.genre),
+  uniq
+)
+
+const limit = curry((lim, arr) => slice(0, lim, arr))
+
+const getRating = (min: number, max: number): number => parseFloat((Math.random() * (max - min + 1) + min).toFixed(1))
+
+const containsSearchTerm = curry((searchTerm: string, book: any) => book.title.toLowerCase().includes(searchTerm))
 
 export default function(server: any) {
   server.config({
-    serializers: {
-      product: RestSerializer.extend({
-        include: ['categories'],
-        embed: true
-      })
-    },
-
     models: {
       category: Model.extend({
-        products: hasMany()
+        books: hasMany()
       }),
-      product: Model.extend({
-        categories: belongsTo()
+      book: Model.extend({
+        categories: hasMany()
       })
     },
 
     factories: {
-      category: Factory.extend({
-        name(i: any) {
-          return `Category ${i}`
-        },
-
-        afterCreate(categories: any, server: { createList: any }) {
-          if (!categories.products.length) {
-            server.createList('product', 5, { categories })
-          }
-        }
-      }),
-      product: Factory.extend({
-        sku: 'qw03i1',
-        type: 'Air Max'
+      book: Factory.extend({
+        src: '#',
+        rating: () => getRating(5, 9),
+        release_date: () => faker.date.past().toLocaleDateString(),
+        img: () => faker.image.unsplash.imageUrl(640, 480, 'books', 'books')
       })
     },
 
     seeds() {
-      server.create('category')
-      // server.createList('product', 100)
-      // const clothes = server.create('category', { name: 'Clothes' })
-      // server.create('product', { sku: 'qw03i3', type: 'MontClaire', categories: clothes })
+      forEach(book => server.create('book', book), booksDb)
+      forEach(category => server.create('category', { category }), getUniqGenres(booksDb))
     },
 
     routes() {
-      this.get('/api/products', (schema: any) => {
-        return schema.products.all()
+      this.get('/api/books', ({ books }: any, req: any) => {
+        const filteredBooks = books.where(containsSearchTerm(req.queryParams.q))
+        return limit(25, filteredBooks.length ? filteredBooks : books.all())
       })
-      this.post('/api/products', (schema: any, request: any) => {
-        const attrs = JSON.parse(request.requestBody)
-        return schema.products.create(attrs)
-      })
-      this.delete('/api/products/:id', (schema: any, request: any) => {
-        const id = request.params.id
-        return schema.products.find(id).destroy()
-      })
-      this.get('/api/categories', (schema: any) => {
+      this.get('/api/books/categories', (schema: any) => {
         return schema.categories.all()
-      })
-      this.get('/api/categories/:id/products', (schema: any, request: any) => {
-        const categoryId = request.params.id
-        const categories = schema.categories.find(categoryId)
-
-        return categories.products
       })
     }
   })
