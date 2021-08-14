@@ -1,4 +1,4 @@
-import { pipe, pluck, uniq, forEach, slice, curry } from 'ramda'
+import { pipe, pluck, uniq, forEach, slice, curry, toLower, includes } from 'ramda'
 // @ts-ignore
 import { Factory, Model, hasMany } from 'miragejs'
 // @ts-ignore
@@ -12,16 +12,20 @@ export default function(server: any) {
 
   const limit = curry((lim, arr) => slice(0, lim, arr))
 
+  const getLower = (search: string, title: string): boolean => pipe(toLower, includes(search))(title)
+
   const getUniqCategory = (books: IBook[], categoryName: string) => pipe<any, any, IBook[]>(pluck(categoryName), uniq)(books)
 
   const getRating = (min: number, max: number): number => parseFloat((Math.random() * (max - min + 1) + min).toFixed(1))
 
-  const containsSearchTerm = curry((searchTerm: string, book: IBook): boolean => book.title.toLowerCase().includes(searchTerm))
+  const containsSearchTerm = curry((searchTerm: string, book: IBook): boolean => getLower(searchTerm, book.title))
+
+  const getCategoryType = (categoryName: string) => (['volume_sales', 'publication_date'].includes(categoryName) ? 'range' : 'selection')
 
   const getCategory = curry(
     (books: IBook[], categoryName: string): ICategory => ({
       name: categoryName,
-      type: ['volume_sales', 'publication_date'].includes(categoryName) ? 'range' : 'selection',
+      type: getCategoryType(categoryName),
       options: getUniqCategory(books, categoryName)
     })
   )
