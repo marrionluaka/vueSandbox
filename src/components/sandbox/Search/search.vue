@@ -20,9 +20,9 @@
       CloseIcon.search-close(v-if="searchInput")
 
   .search-results(data-test="search-results" :class="{ loading: searchInput && !suggestedResults.length }")
-    ul.space-y-2.py-2(v-if="searchInput")
+    ul.space-y-2.py-2(v-if="searchInput" data-test="search-results-content")
       li
-        SearchAction(@click="$emit('on-search', searchInput)" data-test="submit")
+        SearchAction(@click="onSearch" data-test="submit")
           .flex.justify-between.items-center
             .flex.items-center
               .mr-2.my-1.p-2.border.rounded-full.border-gray-200
@@ -56,21 +56,27 @@ export default defineComponent({
   setup(_, { emit }) {
     const searchInput: Ref<any> = ref(null)
     const isSearchActive: Ref<boolean> = ref(false)
+
     const clearSearch = () => {
-      searchInput.value = ''
+      searchInput.value = null
       isSearchActive.value = false
+    }
+
+    const onSearch = () => {
+      emit('on-search', searchInput.value)
+      clearSearch()
     }
 
     const onKeydown = debounce((e: any) => emit('keydown', e.target.value), 400)
 
-    return { searchInput, isSearchActive, onKeydown, clearSearch }
+    return { searchInput, isSearchActive, onSearch, onKeydown, clearSearch }
   }
 })
 </script>
 
 <style lang="stylus" scoped>
 .search
-  @apply w-full flex flex-col
+  @apply w-full flex flex-col relative
   &-overlay
     @apply w-screen h-screen absolute inset-0 bg-white bg-opacity-50
     z-index -1
@@ -85,5 +91,5 @@ export default defineComponent({
   &-btn
     @apply bg-gray-500 text-white rounded-full ml-2 transform scale-75
   &-results
-    @apply bg-gray-100 shadow rounded-b-md
+    @apply bg-gray-100 shadow rounded-b-md absolute inset-x-0 top-full
 </style>

@@ -28,10 +28,11 @@ describe('Search specs', () => {
   it('performs a search', async () => {
     await wrapper.find('[data-test="search"]').trigger('focus')
     await wrapper.find("[data-test='search']").setValue('google search')
-    await wrapper.find("[data-test='submit']").trigger('click')
-
     expect(wrapper.find("[data-test='submit']").text()).toContain('Search "google search" in items')
+
+    await wrapper.find("[data-test='submit']").trigger('click')
     expect(wrapper.emitted('on-search')[0]).toEqual(['google search'])
+    expect(wrapper.find('[data-test="search-results-content"]').exists()).toBe(false)
   })
 
   it('emits a "keydown" event for each key stroke', async () => {
