@@ -8,7 +8,7 @@ export default {
 const Template = args => ({
   template: `
     <Tooltip v-bind="args">
-      <button class="">Click Me!</button>
+      <button class="">Hover Me!</button>
     </Tooltip>
   `,
 
