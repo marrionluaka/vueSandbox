@@ -39,7 +39,7 @@ export default defineComponent({
 
 <style lang="stylus" scoped>
 .checkbox
-  @apply flex items-center h-5
+  @apply flex items-center
   &-input
-    @apply h-4 w-4 mr-2 text-indigo-600 border-gray-300 rounded cursor-pointer
+    @apply w-4 mr-2 text-indigo-600 border-gray-300 rounded cursor-pointer
 </style>
