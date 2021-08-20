@@ -6,11 +6,11 @@ export default function(axios: any) {
     getCategories
   })
 
-  async function getBooks(search: string = ''): Promise<IBook[]> {
+  async function getBooks(query: string = ''): Promise<IBook[]> {
     try {
       const {
         data: { books }
-      } = await axios.get(`books?q=${search}`)
+      } = await axios.get(`books?${query}`)
       return books
     } catch (e) {
       throw new Error('Cannot execute getBooks API')

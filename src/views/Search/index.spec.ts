@@ -9,6 +9,7 @@ jest.mock('../../api', () => ({
         const books = [
           {
             id: 1,
+            author: 'James Clear',
             title: 'Atomic Habits',
             description: 'Lorem ipsum dolor sit amet.',
             rating: 9.7,
@@ -16,6 +17,7 @@ jest.mock('../../api', () => ({
           },
           {
             id: 2,
+            author: 'Ashlee Vance',
             title: 'Elon Musk: Tesla, SpaceX, and the Quest for a Fantastic Future',
             description: 'Lorem ipsum dolor sit amet.',
             rating: 8.5,
@@ -23,6 +25,7 @@ jest.mock('../../api', () => ({
           },
           {
             id: 3,
+            author: 'some dude',
             title: 'Effortless: Make it Easier to Do What Matters Most',
             description: 'Lorem ipsum dolor sit amet.',
             rating: 8.1,
@@ -30,6 +33,7 @@ jest.mock('../../api', () => ({
           },
           {
             id: 4,
+            author: 'some other dude',
             title: 'The Wright Brothers',
             description: 'Lorem ipsum dolor sit amet.',
             rating: 9.0,
@@ -37,26 +41,35 @@ jest.mock('../../api', () => ({
           }
         ]
         const getBooks = (searchTerm: string) => {
-          const search = RegExp('^(' + searchTerm + ')', 'i')
-          const filterBooks = (item: any): boolean => !!item.title.match(search)
+          const search = RegExp('^(' + sanitize(searchTerm) + ')', 'i')
+          const filterBooks = (item: any): boolean => item.title.match(search) || item.author.match(search)
 
           return filterBooks
         }
 
+        const sanitize = (str: string): string => {
+          if (!str.split('=')[1]) return ''
+
+          if (!str.split('&')[1]) return str.split('=')[1]
+
+          return decodeURI(str.split('&')[1].split('=')[1])
+        }
+
         return resolve(books.filter(getBooks(searchTerm)))
       }),
+
     getCategories: () =>
       new Promise((resolve, _) => {
         const categories = [
           {
             id: 1,
-            name: 'Genre',
-            options: [{ name: 'Romance', value: 'romance' }]
+            name: 'genre',
+            options: ['Romance']
           },
           {
             id: 2,
-            name: 'Author',
-            options: [{ name: 'JK Rowling', value: 'jk-rowling' }]
+            name: 'author',
+            options: ['Ashlee Vance']
           }
         ]
         return resolve(categories)
@@ -105,11 +118,19 @@ describe('Search page', () => {
   it('loads all categories', () => {
     const searchPageCategories = wrapper.find('[data-test="search-page-categories"]').html()
 
-    expect(searchPageCategories).toContain('Author')
-    expect(searchPageCategories).toContain('Genre')
+    expect(searchPageCategories).toContain('author')
+    expect(searchPageCategories).toContain('genre')
     expect(searchPageCategories).toContain('Romance')
-    expect(searchPageCategories).toContain('JK Rowling')
+    expect(searchPageCategories).toContain('Ashlee Vance')
   })
 
-  it.todo('updates the search results on category selection')
+  it('updates the search results on category selection', async () => {
+    const title = 'Elon Musk: Tesla, SpaceX, and the Quest for a Fantastic Future'
+
+    await wrapper.find('[data-test="category-1"] input[type=checkbox]').trigger('input')
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('[data-test="search-page-results"]').html()).toContain(title)
+    expect(wrapper.find('[data-test="search-page-results"]').html()).not.toContain('Atomic Habits')
+  })
 })

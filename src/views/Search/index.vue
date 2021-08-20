@@ -25,7 +25,7 @@
 
   nav.col-span-full(class="lg:col-span-3")
     ul(data-test="search-page-categories")
-      li(v-for="category in categories" :key="category.id")
+      li(v-for="(category, i) in categories" :key="category.id")
         Accordion(:isOpen="true")
           template(#title)
             AccordionTitle(@click="currentPanel = category.id")
@@ -34,9 +34,9 @@
                 ChevronIcon.transition-transform.ease-in-out.transform.scale-75(:class="[isOpen(category.id) ? 'rotate-0' : 'rotate-90']")
 
           AccordionPanel(:isOpen="isOpen(category.id)")
-            ul.h-72.overflow-y-scroll
-              li(v-for="option in category.options" :key="option")
-                Checkbox(:id="option" :name="option" :value="option") {{ option }}
+            ul.h-72.overflow-y-scroll(:data-test="`category-${i}`")
+              li(v-for="(option, idx) in category.options" :key="option")
+                Checkbox(:id="option" :name="option" :value="option" @update:modelValue="onSelectedCategory(category.name, $event)") {{ option }}
 
   main.col-span-full.px-5(class="lg:col-span-9")
     div(data-test="search-page-results")
@@ -50,16 +50,19 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, Ref } from 'vue'
+import { append, reject, find, ifElse, propEq } from 'ramda'
 
 import { bookService } from '../../api'
 
 import { IBook } from '@/entities/book.entity'
 import { ICategory } from '@/entities/category.entity'
 
+import { useQueryBuilder } from '../../hooks/useQueryBuilder'
+
 import Search from '../../components/sandbox/Search/Search.vue'
-import { ChevronIconRight, ChevronIcon } from '../../components/sandbox/shared'
 import SearchItem from '../../components/sandbox/Search/SearchItem.vue'
 import SearchAction from '../../components/sandbox/Search/SearchAction.vue'
+import { ChevronIconRight, ChevronIcon } from '../../components/sandbox/shared'
 
 import Accordion from '../../components/sandbox/Accordion/Accordion.vue'
 import AccordionPanel from '../../components/sandbox/Accordion/AccordionPanel.vue'
@@ -83,10 +86,14 @@ export default defineComponent({
   },
 
   setup() {
+    const searchTerm: Ref<string> = ref('')
     const currentPanel: Ref<number> = ref(0)
     const searchResults: Ref<IBook[]> = ref([])
     const categories: Ref<ICategory[]> = ref([])
     const suggestedResults: Ref<IBook[]> = ref([])
+    const selectedCategories: Ref<any[]> = ref([])
+
+    const { buildQuery } = useQueryBuilder()
 
     onMounted(async () => {
       await onSearch()
@@ -98,9 +105,23 @@ export default defineComponent({
     const onKeydown = _getBooks((books: IBook[]) => (suggestedResults.value = books.slice(0, 3)))
     const getCategories = async () => (categories.value = await bookService.getCategories())
 
+    const onSelectedCategory = async (category: string, value: string) => {
+      const listOfCategories = _getSelectedCategories(category, value, selectedCategories.value)
+      const books = await bookService.getBooks(buildQuery([{ key: 'q', value: searchTerm.value }].concat(listOfCategories)))
+
+      searchResults.value = books
+      selectedCategories.value = listOfCategories
+    }
+
+    const _getSelectedCategories = (category: string, value: string, list: any[]) => {
+      var hasValue = propEq('value', value)
+      return ifElse(find(hasValue) as any, reject(hasValue), append({ key: category, value }))(list)
+    }
+
     function _getBooks(fn: any) {
-      return async (searchTerm: string = '') => {
-        const books = await bookService.getBooks(searchTerm)
+      return async (search: string = '') => {
+        const books = await bookService.getBooks(buildQuery([{ key: 'q', value: search }]))
+        searchTerm.value = search
         fn(books)
       }
     }
@@ -112,7 +133,8 @@ export default defineComponent({
       suggestedResults,
       isOpen,
       onSearch,
-      onKeydown
+      onKeydown,
+      onSelectedCategory
     }
   }
 })
