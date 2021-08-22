@@ -5,7 +5,7 @@ export const useQueryBuilder = () => {
   const sanitizeSearch = (acc: any, val: any) => {
     ifElse(
       isNotNill,
-      () => (acc[val.key] = `${acc[val.key]}+${val.value}`),
+      () => (acc[val.key] = `${acc[val.key]}|${val.value}`),
       () => (acc[val.key] = val.value)
     )(acc[val.key])
 

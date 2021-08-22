@@ -12,7 +12,7 @@ describe('useUrlBuilder', () => {
   })
 
   it('enables AND operator for a single key', () => {
-    const expected = 'q=future&author=Ashlee%20Vance+Jk%20Rowling'
+    const expected = 'q=future&author=Ashlee%20Vance%7CJk%20Rowling'
     const actual = useQueryBuilder().buildQuery([
       { key: 'q', value: 'future' },
       { key: 'author', value: 'Ashlee Vance' },
