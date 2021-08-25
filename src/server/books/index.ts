@@ -7,7 +7,7 @@ import booksDb from './books-db.json'
 import { paginate } from './books-pagination'
 import { IBook } from '@/entities/book.entity'
 import { ICategory } from '@/entities/category.entity'
-import { getBooks, bookCategories } from './books-utils'
+import { getBooks, sortBooks, bookCategories } from './books-utils'
 
 export default function(server: any) {
   const getRating = (min: number, max: number): number => parseFloat((Math.random() * (max - min + 1) + min).toFixed(1))
@@ -51,12 +51,14 @@ export default function(server: any) {
 
       this.get('books', ({ db }: any, req: any) => {
         const reversedFilter: any = flip(filter)
+        const { limit, page, sort_by } = req.queryParams
 
         return pipe(
           pick(bookCategories.concat('q')),
           getBooks,
           reversedFilter(db.books),
-          paginate(+req.queryParams?.limit, +req.queryParams?.page)
+          sortBooks(sort_by),
+          paginate(+limit, +page)
         )(req.queryParams)
       })
       this.get('books/categories', (schema: any) => {
