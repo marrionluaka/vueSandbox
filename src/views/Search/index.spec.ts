@@ -1,4 +1,5 @@
 import { mount } from '@vue/test-utils'
+import { fromPairs, map, pipe, split, pick, toLower, includes, or, trim, ifElse, isEmpty, F } from 'ramda'
 import SearchPage from './index.vue'
 
 jest.mock('lodash', () => ({ debounce: jest.fn(fn => fn) }))
@@ -40,22 +41,33 @@ jest.mock('../../api', () => ({
             src: 'http://the-wright-brothers.com'
           }
         ]
-        const getBooks = (searchTerm: string) => {
-          const search = RegExp('^(' + sanitize(searchTerm) + ')', 'i')
-          const filterBooks = (item: any): boolean => item.title.match(search) || item.author.match(search)
 
-          return filterBooks
+        const sanitizeSearch = pipe<string, string, string[], any, any, any>(
+          decodeURI,
+          split('&'),
+          map(pipe(toLower, split('='))),
+          fromPairs,
+          pick(['q', 'author'])
+        )
+
+        const hasBook = (searchTerm: string) => {
+          const { q, author } = sanitizeSearch(searchTerm)
+
+          return (item: any): boolean => {
+            if (author) {
+              if (q) return item.author.toLowerCase().includes(author) || item.title.toLowerCase().includes(q)
+              return item.author.toLowerCase().includes(author)
+            }
+            return item.title.toLowerCase().includes(q)
+          }
         }
 
-        const sanitize = (str: string): string => {
-          if (!str.split('=')[1]) return ''
-
-          if (!str.split('&')[1]) return str.split('=')[1]
-
-          return decodeURI(str.split('&')[1].split('=')[1])
-        }
-
-        return resolve(books.filter(getBooks(searchTerm)))
+        return resolve({
+          count: books.length,
+          next: 2,
+          prev: 0,
+          results: books.filter(hasBook(searchTerm))
+        })
       }),
 
     getCategories: () =>

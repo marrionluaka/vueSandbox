@@ -1,4 +1,22 @@
-import { reverse, sortBy, prop, toLower, flip, curry, of, any, pick, all, split, ifElse, includes, reduce, keys, KeyValuePair } from 'ramda'
+import {
+  filter,
+  reverse,
+  sortBy,
+  prop,
+  toLower,
+  flip,
+  curry,
+  of,
+  any,
+  pick,
+  all,
+  split,
+  ifElse,
+  includes,
+  reduce,
+  keys,
+  KeyValuePair
+} from 'ramda'
 import { IBook } from '@/entities/book.entity'
 
 export const bookCategories = ['author', 'genre', 'volume_sales', 'publisher', 'publication_date', 'imprint']
@@ -11,7 +29,7 @@ export const sortBooks = curry((needle: string, haystack: IBook[]) => {
   return sortBy(prop<string, any>(needle), haystack)
 })
 
-export function getBooks(query: any): (book: IBook) => boolean {
+export function getBooks(query: any, books: IBook[]): IBook[] {
   const search = _updateSearchKey(query)
   const qKeys = keys(search)
   const selectedQueries = _getSelectedQueries(search)
@@ -20,7 +38,7 @@ export function getBooks(query: any): (book: IBook) => boolean {
   const getBook = (key: string, book: IBook) => toLower(prop<string, any>(key, pick(qKeys, book)))
   const hasBook = curry((book, key) => any(flippedIncludes(getBook(key, book)), selectedQueries[key]))
 
-  return (book: IBook) => all(hasBook(book), qKeys)
+  return filter((book: IBook) => all(hasBook(book), qKeys), books)
 }
 
 function _getSelectedQueries(query: any) {

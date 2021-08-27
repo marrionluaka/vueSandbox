@@ -43,20 +43,20 @@ const books = [
 describe('book utils', () => {
   it('finds books by title', () => {
     const expected = 'Da Vinci Code,The'
-    const actual = fetchBooks(getBooks({ q: 'da Vinci Co' }))
+    const actual = getBooks({ q: 'da Vinci Co' }, books)
 
     expect(actual[0].title).toBe(expected)
   })
 
   it('finds books by genre', () => {
     const expected = 'Harry Potter and the Deathly Hallows'
-    const actual = fetchBooks(getBooks({ genre: 'Y2.1  Children' }))
+    const actual = getBooks({ genre: 'Y2.1  Children' }, books)
 
     expect(actual[0].title).toBe(expected)
   })
 
   it('finds books for multiple authors', () => {
-    const actual = fetchBooks(getBooks({ author: 'Rowling J.K.|Brown Dan' }))
+    const actual = getBooks({ author: 'Rowling J.K.|Brown Dan' }, books)
 
     expect(actual.find(x => x.author.includes('Brown Dan'))).toBeTruthy()
     expect(actual.find(x => x.author.includes('Rowling J.K.'))).toBeTruthy()
@@ -80,7 +80,3 @@ describe('book utils', () => {
     })
   })
 })
-
-function fetchBooks(fn: any) {
-  return books.filter(fn)
-}

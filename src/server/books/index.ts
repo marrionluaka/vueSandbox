@@ -1,4 +1,4 @@
-import { pipe, pluck, uniq, forEach, curry, pick, __, filter, flip, tap } from 'ramda'
+import { pipe, pluck, uniq, forEach, curry, pick } from 'ramda'
 // @ts-ignore
 import { Factory, Model, hasMany } from 'miragejs'
 // @ts-ignore
@@ -50,16 +50,9 @@ export default function(server: any) {
       this.namespace = 'api'
 
       this.get('books', ({ db }: any, req: any) => {
-        const reversedFilter: any = flip(filter)
-        const { limit, page, sort_by } = req.queryParams
-
-        return pipe(
-          pick(bookCategories.concat('q')),
-          getBooks,
-          reversedFilter(db.books),
-          sortBooks(sort_by),
-          paginate(+limit, +page)
-        )(req.queryParams)
+        const { limit = 5, page = 0, sort_by } = req.queryParams
+        const allowedQueryParams = pick(bookCategories.concat('q'), req.queryParams)
+        return pipe<IBook[], any[], any[]>(sortBooks(sort_by), paginate(+limit, +page))(getBooks(allowedQueryParams, db.books))
       })
       this.get('books/categories', (schema: any) => {
         return schema.categories.all()

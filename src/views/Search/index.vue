@@ -40,8 +40,8 @@
 
   main.col-span-full.px-5(class="lg:col-span-9")
     div(data-test="search-page-results")
-      ul(class="md:grid sm:grid-cols-2 lg:grid-cols-3 md:gap-x-5")
-        li.py-2(v-for="result in searchResults" :key="result.id")
+      ul(class="md:grid sm:grid-cols-2 md:gap-x-5")
+        li.py-2(v-for="result in searchResults.results" :key="result.id")
           .aspect-w-3.aspect-h-2
             img.object-cover.shadow-lg.rounded-lg(:src='result.img' alt='')
           .text-lg.leading-6.font-medium.space-y-1
@@ -53,6 +53,7 @@ import { defineComponent, onMounted, ref, Ref } from 'vue'
 import { append, reject, find, ifElse, propEq } from 'ramda'
 
 import { bookService } from '../../api'
+import { ISearchResults } from '../../api/book-api'
 
 import { IBook } from '@/entities/book.entity'
 import { ICategory } from '@/entities/category.entity'
@@ -88,10 +89,10 @@ export default defineComponent({
   setup() {
     const searchTerm: Ref<string> = ref('')
     const currentPanel: Ref<number> = ref(0)
-    const searchResults: Ref<IBook[]> = ref([])
     const categories: Ref<ICategory[]> = ref([])
     const suggestedResults: Ref<IBook[]> = ref([])
     const selectedCategories: Ref<any[]> = ref([])
+    const searchResults: Ref<ISearchResults> = ref({} as ISearchResults)
 
     const { buildQuery } = useQueryBuilder()
 
@@ -101,29 +102,37 @@ export default defineComponent({
     })
 
     const isOpen = (x: number) => x === currentPanel.value
-    const onSearch = _getBooks((books: IBook[]) => (searchResults.value = books))
-    const onKeydown = _getBooks((books: IBook[]) => (suggestedResults.value = books.slice(0, 3)))
+    const onSearch = _getBooks((bookResults: ISearchResults) => (searchResults.value = bookResults))
+    const onKeydown = _getBooks((bookResults: ISearchResults) => (suggestedResults.value = bookResults.results.slice(0, 3)))
     const getCategories = async () => (categories.value = await bookService.getCategories())
 
     const onSelectedCategory = async (category: string, value: string) => {
       const listOfCategories = _getSelectedCategories(category, value, selectedCategories.value)
-      const books = await bookService.getBooks(buildQuery([{ key: 'q', value: searchTerm.value }].concat(listOfCategories)))
+      const bookResults = await bookService.getBooks(buildQuery(_getLatestQuery().concat(listOfCategories)))
 
-      searchResults.value = books
+      searchResults.value = bookResults
       selectedCategories.value = listOfCategories
     }
 
-    const _getSelectedCategories = (category: string, value: string, list: any[]) => {
-      var hasValue = propEq('value', value)
+    function _getSelectedCategories(category: string, value: string, list: any[]) {
+      const hasValue = propEq('value', value)
       return ifElse(find(hasValue) as any, reject(hasValue), append({ key: category, value }))(list)
     }
 
     function _getBooks(fn: any) {
       return async (search: string = '') => {
-        const books = await bookService.getBooks(buildQuery([{ key: 'q', value: search }]))
+        const books = await bookService.getBooks(buildQuery(_getLatestQuery(search)))
         searchTerm.value = search
         fn(books)
       }
+    }
+
+    function _getLatestQuery(search: string = searchTerm.value) {
+      return [
+        { key: 'q', value: search },
+        { key: 'limit', value: 12 },
+        { key: 'sort_by', value: 'title' }
+      ]
     }
 
     return {

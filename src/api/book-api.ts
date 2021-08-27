@@ -1,17 +1,22 @@
 import { IBook } from '@/entities/book.entity'
 
+export interface ISearchResults {
+  count: number
+  next: number
+  prev: number
+  results: IBook[]
+}
+
 export default function(axios: any) {
   return Object.freeze({
     getBooks,
     getCategories
   })
 
-  async function getBooks(query: string = ''): Promise<IBook[]> {
+  async function getBooks(query: string = ''): Promise<ISearchResults> {
     try {
-      const {
-        data: { books }
-      } = await axios.get(`books?${query}`)
-      return books
+      const { data } = await axios.get(`books?${query}`)
+      return data
     } catch (e) {
       throw new Error('Cannot execute getBooks API')
     }
