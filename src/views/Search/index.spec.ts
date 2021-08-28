@@ -63,7 +63,7 @@ jest.mock('../../api', () => ({
         }
 
         return resolve({
-          count: books.length,
+          count: 2,
           next: 2,
           prev: 0,
           results: books.filter(hasBook(searchTerm))
@@ -144,5 +144,23 @@ describe('Search page', () => {
 
     expect(wrapper.find('[data-test="search-page-results"]').html()).toContain(title)
     expect(wrapper.find('[data-test="search-page-results"]').html()).not.toContain('Atomic Habits')
+  })
+
+  it('loads more content when the user reaches the end of the page and clicks the load more button', async () => {
+    await wrapper.find('[data-test="load-more"]').trigger('click')
+    expect(wrapper.find('[data-test="search-page-results"]').html()).toContain('Atomic Habits')
+  })
+
+  it.skip('resets all filters', async () => {
+    expect(wrapper.find('[data-test="category-1"] input[type=checkbox]').element.checked).toBe(false)
+
+    await wrapper.find('[data-test="category-1"] input[type=checkbox]').setChecked()
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.find('[data-test="category-1"] input[type=checkbox]').element.checked).toBe(true)
+
+    await wrapper.find('[data-test="reset-filters"]').trigger('click')
+
+    expect(wrapper.find('[data-test="category-1"] input[type=checkbox]').element.checked).toBe(false)
   })
 })

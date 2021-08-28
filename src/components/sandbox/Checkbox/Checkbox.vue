@@ -6,6 +6,7 @@
       :id="id"
       :name="name"
       :value="value"
+      :checked="isChecked"
       class="focus:ring-indigo-500"
       @input="$emit('update:modelValue', $event.target.value)"
     )
@@ -30,6 +31,10 @@ export default defineComponent({
     value: {
       type: String,
       required: true
+    },
+    isChecked: {
+      type: Boolean,
+      default: false
     }
   },
 

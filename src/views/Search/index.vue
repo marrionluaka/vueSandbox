@@ -24,19 +24,20 @@
             ChevronIconRight.transform.scale-75.text-gray-500
 
   nav.col-span-full(class="lg:col-span-3")
+    //- button(data-test="reset-filters" @click="resetFilters") Reset filters
     ul(data-test="search-page-categories")
       li(v-for="(category, i) in categories" :key="category.id")
         Accordion(:isOpen="true")
           template(#title)
             AccordionTitle(@click="currentPanel = category.id")
               .flex.justify-between.py-2
-                p.text-xl.font-bold.capitalize {{ category.name }}
+                p.text-xl.font-bold.capitalize {{ removeUnderscore(category.name) }}
                 ChevronIcon.transition-transform.ease-in-out.transform.scale-75(:class="[isOpen(category.id) ? 'rotate-0' : 'rotate-90']")
 
           AccordionPanel(:isOpen="isOpen(category.id)")
             ul.h-72.overflow-y-scroll(:data-test="`category-${i}`")
-              li(v-for="(option, idx) in category.options" :key="option")
-                Checkbox(:id="option" :name="option" :value="option" @update:modelValue="onSelectedCategory(category.name, $event)") {{ option }}
+              li(v-for="(option, idx) in category.options" :key="option.value")
+                Checkbox(:id="option.value" :isChecked="option.selected" :name="option.value" :value="option.value" @update:modelValue="onSelectedCategory(category.name, $event)") {{ option.value }}
 
   main.col-span-full.px-5(class="lg:col-span-9")
     div(data-test="search-page-results")
@@ -46,11 +47,12 @@
             img.object-cover.shadow-lg.rounded-lg(:src='result.img' alt='')
           .text-lg.leading-6.font-medium.space-y-1
             h3 {{ result.title }}
+    button(data-test="load-more" @click="loadMore") Load More
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref, Ref } from 'vue'
-import { append, reject, find, ifElse, propEq } from 'ramda'
+import { append, reject, find, ifElse, propEq, map, over, set, lensProp, lensPath } from 'ramda'
 
 import { bookService } from '../../api'
 import { ISearchResults } from '../../api/book-api'
@@ -102,9 +104,22 @@ export default defineComponent({
     })
 
     const isOpen = (x: number) => x === currentPanel.value
+    const removeUnderscore = (str: string) => str.replace('_', ' ')
     const onSearch = _getBooks((bookResults: ISearchResults) => (searchResults.value = bookResults))
     const onKeydown = _getBooks((bookResults: ISearchResults) => (suggestedResults.value = bookResults.results.slice(0, 3)))
-    const getCategories = async () => (categories.value = await bookService.getCategories())
+
+    const getCategories = async () => {
+      const listOfCategories = await bookService.getCategories()
+      categories.value = _setFilters(listOfCategories)
+    }
+
+    const loadMore = async () => {
+      if (searchResults.value.count === searchResults.value.results.length) return
+
+      const query = buildQuery(_getLatestQuery().concat({ key: 'page', value: searchResults.value.next }))
+      const books = await bookService.getBooks(query)
+      searchResults.value = { ...books, results: searchResults.value.results.concat(books.results) }
+    }
 
     const onSelectedCategory = async (category: string, value: string) => {
       const listOfCategories = _getSelectedCategories(category, value, selectedCategories.value)
@@ -135,14 +150,26 @@ export default defineComponent({
       ]
     }
 
+    function _setFilters(listOfCategories: any[]) {
+      return map(
+        over(
+          lensProp<any, string>('options'),
+          map(value => ({ value, selected: false }))
+        ),
+        listOfCategories
+      )
+    }
+
     return {
       categories,
       currentPanel,
       searchResults,
       suggestedResults,
       isOpen,
+      loadMore,
       onSearch,
       onKeydown,
+      removeUnderscore,
       onSelectedCategory
     }
   }

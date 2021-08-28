@@ -39,4 +39,9 @@ describe('Checkbox spec', () => {
     await wrapper.find('input[type="checkbox"]').trigger('input')
     expect(wrapper.emitted('update:modelValue')[0][0]).toBe('CA')
   })
+
+  it('defaults to checked on mount', async () => {
+    await wrapper.setProps({ isChecked: true })
+    expect(wrapper.find('input[type="checkbox"]').element.checked).toBe(true)
+  })
 })
