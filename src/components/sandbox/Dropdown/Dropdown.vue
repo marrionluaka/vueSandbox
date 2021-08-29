@@ -5,25 +5,27 @@
       | {{ defaultOption }}
 
   ul.dropdown__items
-    li(v-for="option in options" :key="option.key")
+    li(v-for="option in options" :key="option.value")
       button.appearance-none.bg-transparent.w-full.text-left(
-        :data-test="`dropdown-item-${option.key}`"
-        @click="closeDropdown(option.value)"
+        :data-test="`dropdown-item-${option.value}`"
+        @click="closeDropdown(option)"
         @mouseover="activeItem = option.value"
       )
         slot(:option="getOption(option)")
-          | {{ option.value }}
+          | {{ option.display }}
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, onUnmounted, ref, Ref, PropType } from 'vue'
 
 export interface IOption {
-  key: string | number
-  value: string
+  display: string
+  value: string | number
 }
 
 export default defineComponent({
+  name: 'Dropdown',
+
   props: {
     currentOption: {
       type: String,
@@ -41,13 +43,13 @@ export default defineComponent({
     const dropdown: Ref<any> = ref(null)
     const isOpen: Ref<boolean> = ref(false)
     const activeItem: Ref<string> = ref('')
-    const selectedItem: Ref<string> = ref('')
+    const selectedItem: Ref<string | number> = ref('')
     const defaultOption: Ref<string> = ref(props.currentOption)
 
-    const closeDropdown = (value: string) => {
+    const closeDropdown = ({ value, display }: IOption) => {
       isOpen.value = false
       selectedItem.value = value
-      defaultOption.value = value
+      defaultOption.value = display
       emit('on-selected', value)
     }
 

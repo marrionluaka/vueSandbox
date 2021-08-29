@@ -9,9 +9,9 @@ describe('Dropdown', () => {
       props: {
         currentOption: 'Option one',
         options: [
-          { key: 1, value: 'Option 1' },
-          { key: 2, value: 'Option 2' },
-          { key: 3, value: 'Option 3' }
+          { value: 1, display: 'Option 1' },
+          { value: 2, display: 'Option 2' },
+          { value: 3, display: 'Option 3' }
         ]
       },
       ...opts
@@ -66,7 +66,7 @@ describe('Dropdown', () => {
       slots: {
         default: `
           <template #default="{ option }">
-            <div>{{ option.value }} - template </div>
+            <div>{{ option.display }} - template </div>
           </template>
         `
       }
@@ -81,7 +81,7 @@ describe('Dropdown', () => {
         default: `
           <template #default="{ option }">
             <div :class="{ active: option.isActive }">
-              {{ option.value }} - {{ option.isSelected ? 'selected' : 'template' }}
+              {{ option.display }} - {{ option.isSelected ? 'selected' : 'template' }}
             </div>
           </template>
         `

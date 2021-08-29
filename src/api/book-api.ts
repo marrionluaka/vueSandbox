@@ -8,10 +8,10 @@ export interface ISearchResults {
 }
 
 export default function(axios: any) {
-  return Object.freeze({
+  return {
     getBooks,
     getCategories
-  })
+  }
 
   async function getBooks(query: string = ''): Promise<ISearchResults> {
     try {
