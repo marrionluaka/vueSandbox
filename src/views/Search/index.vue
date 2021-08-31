@@ -25,19 +25,7 @@
 
   nav.col-span-full(class="lg:col-span-3")
     //- button(data-test="reset-filters" @click="resetFilters") Reset filters
-    ul(data-test="search-page-categories")
-      li(v-for="(category, i) in categories" :key="category.id")
-        Accordion(:isOpen="true")
-          template(#title)
-            AccordionTitle(@click="currentPanel = category.id")
-              .flex.justify-between.py-2
-                p.text-xl.font-bold.capitalize {{ removeUnderscore(category.name) }}
-                ChevronIcon.transition-transform.ease-in-out.transform.scale-75(:class="[isOpen(category.id) ? 'rotate-0' : 'rotate-90']")
-
-          AccordionPanel(:isOpen="isOpen(category.id)")
-            ul.h-72.overflow-y-scroll(:data-test="`category-${i}`")
-              li(v-for="(option, idx) in category.options" :key="option.value")
-                Checkbox(:id="option.value" :isChecked="option.selected" :name="option.value" :value="option.value" @update:modelValue="onSelectedCategory(category.name, $event)") {{ option.value }}
+    Filters(:categories="categories" @on-selected-category="onSelectedCategory")
 
   main.col-span-full.px-5(class="lg:col-span-9")
     Dropdown(:options="sortOptions" currentOption="Alphabetical" @on-selected="sortResults")
@@ -57,39 +45,27 @@ import { append, reject, find, ifElse, propEq, map, over, lensProp, concat, __, 
 
 import { bookService } from '../../api'
 import { ISearchResults } from '../../api/book-api'
-
 import { IBook } from '@/entities/book.entity'
 import { ICategory } from '@/entities/category.entity'
-
 import { useQueryBuilder } from '../../hooks/useQueryBuilder'
-
+import Filters from './Filters.vue'
 import Dropdown from '../../components/sandbox/Dropdown/Dropdown.vue'
-
 import Search from '../../components/sandbox/Search/Search.vue'
 import SearchItem from '../../components/sandbox/Search/SearchItem.vue'
 import SearchAction from '../../components/sandbox/Search/SearchAction.vue'
 import { ChevronIconRight, ChevronIcon } from '../../components/sandbox/shared'
-
-import Accordion from '../../components/sandbox/Accordion/Accordion.vue'
-import AccordionPanel from '../../components/sandbox/Accordion/AccordionPanel.vue'
-import AccordionTitle from '../../components/sandbox/Accordion/AccordionTitle.vue'
-
-import Checkbox from '../../components/sandbox/Checkbox/Checkbox.vue'
 
 export default defineComponent({
   name: 'SearchPage',
 
   components: {
     Search,
+    Filters,
     Dropdown,
     SearchItem,
     SearchAction,
     ChevronIcon,
-    ChevronIconRight,
-    Accordion,
-    AccordionPanel,
-    AccordionTitle,
-    Checkbox
+    ChevronIconRight
   },
 
   setup() {
@@ -99,7 +75,6 @@ export default defineComponent({
     ]
 
     const searchTerm: Ref<string> = ref('')
-    const currentPanel: Ref<number> = ref(0)
     const sortOptions: Ref<any[]> = ref([])
     const latestQuery: Ref<any[]> = ref(defaultQuery)
     const categories: Ref<ICategory[]> = ref([])
@@ -120,14 +95,11 @@ export default defineComponent({
       ]
     })
 
-    const isOpen = (x: number) => x === currentPanel.value
-    const removeUnderscore = (str: string) => str.replace('_', ' ')
     const onSearch = _getBooks((bookResults: ISearchResults) => (searchResults.value = bookResults))
     const onKeydown = _getBooks((bookResults: ISearchResults) => (suggestedResults.value = bookResults.results.slice(0, 3)))
 
     const getCategories = async () => {
-      const listOfCategories = await bookService.getCategories()
-      categories.value = _setFilters(listOfCategories)
+      categories.value = _setFilters(await bookService.getCategories())
     }
 
     const loadMore = async () => {
@@ -181,15 +153,12 @@ export default defineComponent({
     return {
       categories,
       sortOptions,
-      currentPanel,
       searchResults,
       suggestedResults,
-      isOpen,
       loadMore,
       onSearch,
       onKeydown,
       sortResults,
-      removeUnderscore,
       onSelectedCategory
     }
   }
