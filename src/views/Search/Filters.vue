@@ -1,7 +1,7 @@
 <template lang="pug">
 ul(data-test="search-page-categories")
   li(v-for="(category, i) in categories" :key="category.id")
-    Accordion(:isOpen="true")
+    Accordion
       template(#title)
         AccordionTitle(@click="currentPanel = category.id")
           .flex.justify-between.py-2
@@ -9,7 +9,7 @@ ul(data-test="search-page-categories")
             ChevronIcon.transition-transform.ease-in-out.transform.scale-75(:class="[isOpen(category.id) ? 'rotate-0' : 'rotate-90']")
 
       AccordionPanel(:isOpen="isOpen(category.id)")
-        ul.h-72.overflow-y-scroll(:data-test="`category-${i}`")
+        ul.h-72.overflow-y-scroll.p-2(:data-test="`category-${i}`")
           li(v-for="(option, idx) in category.options" :key="option.value")
             Checkbox(
               :id="option.value"
@@ -49,8 +49,8 @@ export default defineComponent({
   emits: ['on-selected-category'],
 
   setup() {
-    const currentPanel: Ref<number> = ref(0)
-    const isOpen = (x: number) => x === currentPanel.value
+    const currentPanel: Ref<number> = ref(1)
+    const isOpen = (x: number) => x == currentPanel.value
     const removeUnderscore = (x: string) => x.replace('_', ' ')
 
     return { currentPanel, isOpen, removeUnderscore }

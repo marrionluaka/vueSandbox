@@ -5,7 +5,7 @@
       | {{ defaultOption }}
 
   ul.dropdown__items
-    li(v-for="option in options" :key="option.value")
+    li.pb-1(v-for="option in options" :key="option.value")
       button.appearance-none.bg-transparent.w-full.text-left(
         :data-test="`dropdown-item-${option.value}`"
         @click="closeDropdown(option)"
@@ -89,17 +89,9 @@ export default defineComponent({
       left 0
 
   &__selected
-    @apply py-3 pr-4 pl-3 bg-transparent capitalize
+    @apply py-3 bg-transparent capitalize
 
   &__items
-    @apply absolute z-10 max-h-0 w-full opacity-0 transition-all rounded-xl overflow-hidden order-1 space-y-2
-    top 70px
-    min-width 250px
-    &::-webkit-scrollbar
-      width 8px
-      background #aaa
-      border-radius 0 8px 8px 0
-    &::-webkit-scrollbar-thumb
-      background #ccc
-      border-radius 0 8px 8px 0
+    @apply absolute max-h-0 w-full opacity-0 transition-all overflow-hidden order-1 p-1
+    top 50px
 </style>
