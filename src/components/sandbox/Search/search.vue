@@ -78,7 +78,7 @@ export default defineComponent({
 .search
   @apply w-full flex flex-col relative
   &-overlay
-    @apply w-screen h-screen absolute inset-0 bg-white bg-opacity-50 inset-0
+    @apply w-screen h-screen fixed inset-0 bg-white bg-opacity-50 inset-0
   &-input
     @apply shadow w-full border-gray-300 px-4 rounded-md h-11
     &-icons

@@ -37,7 +37,7 @@
             img.object-cover.shadow-lg.rounded-lg(:src='result.img' alt='')
           .text-lg.leading-6.font-medium.space-y-1
             h3 {{ result.title }}
-    button(data-test="load-more" @click="loadMore") Load More
+    button(data-test="load-more" @click="loadMoreResults") Load More
 </template>
 
 <script lang="ts">
@@ -103,7 +103,7 @@ export default defineComponent({
       categories.value = _setFilters(await bookService.getCategories())
     }
 
-    const loadMore = async () => {
+    const loadMoreResults = async () => {
       if (searchResults.value.count === searchResults.value.results.length) return
 
       const query = buildQuery((latestQuery.value = _setQuery('page', [{ key: 'page', value: searchResults.value.next }])))
@@ -122,6 +122,18 @@ export default defineComponent({
 
       searchResults.value = bookResults
       selectedCategories.value = listOfCategories
+    }
+
+    return {
+      categories,
+      sortOptions,
+      searchResults,
+      suggestedResults,
+      loadMoreResults,
+      onSearch,
+      onKeydown,
+      sortResults,
+      onSelectedCategory
     }
 
     function _getSelectedCategories(category: string, value: string, list: any[]) {
@@ -149,18 +161,6 @@ export default defineComponent({
         ),
         listOfCategories
       )
-    }
-
-    return {
-      categories,
-      sortOptions,
-      searchResults,
-      suggestedResults,
-      loadMore,
-      onSearch,
-      onKeydown,
-      sortResults,
-      onSelectedCategory
     }
   }
 })
