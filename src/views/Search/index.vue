@@ -30,6 +30,7 @@
   main.col-span-full.px-5(class="md:col-span-6 lg:col-span-8")
     .flex.justify-end
       Dropdown(:options="sortOptions" currentOption="Alphabetical" @on-selected="sortResults")
+
     div(data-test="search-page-results")
       ul(class="md:grid lg:grid-cols-2 md:gap-x-5")
         li.py-2(v-for="result in searchResults.results" :key="result.id")
@@ -37,6 +38,7 @@
             img.object-cover.shadow-lg.rounded-lg(:src='result.img' alt='')
           .text-lg.leading-6.font-medium.space-y-1
             h3 {{ result.title }}
+
     button(data-test="load-more" @click="loadMoreResults") Load More
 </template>
 
