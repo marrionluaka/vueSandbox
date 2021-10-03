@@ -76,11 +76,11 @@ export default defineComponent({
 
 <style lang="stylus" scoped>
 .search
-  @apply w-full flex flex-col relative
+  @apply w-full flex flex-col relative z-50
   &-overlay
-    @apply w-screen h-screen fixed inset-0 bg-white bg-opacity-50 inset-0 z-10
+    @apply w-screen h-screen fixed inset-0 bg-white bg-opacity-50 inset-0
   &-input
-    @apply shadow w-full border-gray-300 px-4 rounded-md h-11
+    @apply shadow w-full border-gray-300 px-4 rounded-md h-11 z-20
     &-icons
       @apply transform scale-90
     &-component
@@ -90,5 +90,5 @@ export default defineComponent({
   &-btn
     @apply bg-gray-500 text-white rounded-full ml-2 transform scale-75
   &-results
-    @apply bg-gray-100 shadow rounded-b-md absolute inset-x-0 top-full z-10
+    @apply bg-gray-100 shadow rounded-b-md absolute inset-x-0 top-full z-20
 </style>

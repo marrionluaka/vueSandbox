@@ -24,39 +24,56 @@
             ChevronIconRight.transform.scale-75.text-gray-500
 
   nav.col-span-full.mb-4(class="md:col-span-6 md:mb-0 lg:col-span-4")
-    //- button(data-test="reset-filters" @click="resetFilters") Reset filters
     Filters(:categories="categories" @on-selected-category="onSelectedCategory")
 
   main.col-span-full.px-5(class="md:col-span-6 lg:col-span-8")
     .flex.justify-end
-      Dropdown(:options="sortOptions" currentOption="Alphabetical" @on-selected="sortResults")
+      .flex.items-center
+        p.font-semibold.mr-2.font-sans.text-sm Sort By:
+        select.border-0.pl-0.font-light.text-sm(class="focus:ring-0" v-model="sortOptions.selected" @change="onSortResults($event)" data-test="search-page-sort")
+          option(v-for="option in sortOptions.options" :value="option.value") {{ option.display }}
 
     div(data-test="search-page-results")
       ul(class="md:grid lg:grid-cols-2 md:gap-x-5")
         li.py-2(v-for="result in searchResults.results" :key="result.id")
           .aspect-w-3.aspect-h-2
-            img.object-cover.shadow-lg.rounded-lg(:src='result.img' alt='')
+            img.object-cover.shadow-lg.rounded-lg(:src='result.img' alt='' loading="lazy")
           .text-lg.leading-6.font-medium.space-y-1
             h3 {{ result.title }}
 
-    button(data-test="load-more" @click="loadMoreResults") Load More
+    button(v-if="hasMoreResults" data-test="load-more" @click="onLoadMoreResults") Load More
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, Ref } from 'vue'
+import { computed, ComputedRef, defineComponent, onMounted, ref, Ref } from 'vue'
 import { append, reject, find, ifElse, propEq, map, over, lensProp, concat, __, pipe, flip } from 'ramda'
 
-import { bookService } from '../../api'
-import { ISearchResults } from '../../api/book-api'
+import { bookService } from '@/api'
 import { IBook } from '@/entities/book.entity'
+import { ISearchResults } from '@/api/book-api'
 import { ICategory } from '@/entities/category.entity'
-import { useQueryBuilder } from '../../hooks/useQueryBuilder'
+import { useQueryBuilder } from '@/hooks/useQueryBuilder'
+
 import Filters from './Filters.vue'
-import Dropdown from '../../components/sandbox/Dropdown/Dropdown.vue'
-import Search from '../../components/sandbox/Search/Search.vue'
-import SearchItem from '../../components/sandbox/Search/SearchItem.vue'
-import SearchAction from '../../components/sandbox/Search/SearchAction.vue'
-import { ChevronIconRight, ChevronIcon } from '../../components/sandbox/shared'
+import Search from '@/components/sandbox/Search/search.vue'
+import SearchItem from '@/components/sandbox/Search/SearchItem.vue'
+import SearchAction from '@/components/sandbox/Search/SearchAction.vue'
+import { ChevronIconRight, ChevronIcon } from '@/components/sandbox/shared'
+
+interface IQuery {
+  key: string
+  value: string | number
+}
+
+interface ISortOption {
+  selected: string
+  options: ISortOptionItem[]
+}
+
+interface ISortOptionItem {
+  value: string
+  display: string
+}
 
 export default defineComponent({
   name: 'SearchPage',
@@ -64,7 +81,6 @@ export default defineComponent({
   components: {
     Search,
     Filters,
-    Dropdown,
     SearchItem,
     SearchAction,
     ChevronIcon,
@@ -78,8 +94,8 @@ export default defineComponent({
     ]
 
     const searchTerm: Ref<string> = ref('')
-    const sortOptions: Ref<any[]> = ref([])
-    const latestQuery: Ref<any[]> = ref(defaultQuery)
+    const sortOptions: Ref<ISortOption> = ref({} as ISortOption)
+    const latestQuery: Ref<IQuery[]> = ref(defaultQuery)
     const categories: Ref<ICategory[]> = ref([])
     const suggestedResults: Ref<IBook[]> = ref([])
     const selectedCategories: Ref<any[]> = ref([])
@@ -87,42 +103,50 @@ export default defineComponent({
 
     const { buildQuery } = useQueryBuilder()
 
+    const hasMoreResults: ComputedRef<boolean> = computed(() => searchResults.value.count > searchResults.value.results?.length)
+
     onMounted(async () => {
       await onSearch()
-      await getCategories()
-      sortOptions.value = [
-        { value: 'title', display: 'Alphabetical' },
-        { value: 'rank', display: 'Highest Rank' },
-        { value: '-rank', display: 'Lowest Rank' },
-        { value: 'release_date', display: 'Release Date' }
-      ]
+      categories.value = _setFilters(await bookService.getCategories())
+      sortOptions.value = {
+        selected: 'title',
+        options: [
+          { value: 'title', display: 'Alphabetical' },
+          { value: 'rank', display: 'Highest Rank' },
+          { value: '-rank', display: 'Lowest Rank' },
+          { value: 'release_date', display: 'Release Date' }
+        ]
+      }
     })
 
-    const onSearch = _getBooks((bookResults: ISearchResults) => (searchResults.value = bookResults))
-    const onKeydown = _getBooks((bookResults: ISearchResults) => (suggestedResults.value = bookResults.results.slice(0, 3)))
-
-    const getCategories = async () => {
-      categories.value = _setFilters(await bookService.getCategories())
+    async function onSearch(search: string = '') {
+      await _getBooks((bookResults: ISearchResults) => (searchResults.value = bookResults), search)
     }
 
-    const loadMoreResults = async () => {
-      if (searchResults.value.count === searchResults.value.results.length) return
+    async function onKeydown(search: string = '') {
+      await _getBooks((bookResults: ISearchResults) => (suggestedResults.value = bookResults.results.slice(0, 3)), search)
+    }
 
+    async function onLoadMoreResults() {
       const query = buildQuery((latestQuery.value = _setQuery('page', [{ key: 'page', value: searchResults.value.next }])))
       const bookResults = await bookService.getBooks(query)
+
       searchResults.value = { ...bookResults, results: searchResults.value.results.concat(bookResults.results) }
     }
 
-    const sortResults = async (sortOption: string) => {
-      const query = buildQuery((latestQuery.value = _setQuery('sort_by', [{ key: 'sort_by', value: sortOption }])))
+    async function onSortResults(e: Event) {
+      const query = buildQuery(
+        (latestQuery.value = _setQuery('sort_by', [{ key: 'sort_by', value: (e.target as HTMLInputElement).value }]))
+      )
       searchResults.value = await bookService.getBooks(query)
     }
 
-    const onSelectedCategory = async (category: string, value: string) => {
+    async function onSelectedCategory(category: string, value: string) {
+      latestQuery.value = _removePageQuery(latestQuery.value)
       const listOfCategories = _getSelectedCategories(category, value, selectedCategories.value)
-      const bookResults = await bookService.getBooks(buildQuery((latestQuery.value = _setQuery(category, listOfCategories))))
+      const query = buildQuery((latestQuery.value = _setQuery(category, listOfCategories)))
 
-      searchResults.value = bookResults
+      searchResults.value = await bookService.getBooks(query)
       selectedCategories.value = listOfCategories
     }
 
@@ -130,25 +154,31 @@ export default defineComponent({
       categories,
       sortOptions,
       searchResults,
+      hasMoreResults,
       suggestedResults,
-      loadMoreResults,
       onSearch,
       onKeydown,
-      sortResults,
+      onSortResults,
+      onLoadMoreResults,
       onSelectedCategory
+    }
+
+    async function _getBooks(fn: any, search: string = '') {
+      latestQuery.value = _removePageQuery(latestQuery.value)
+      const query = buildQuery((latestQuery.value = _setQuery('q', [{ key: 'q', value: search }])))
+      const books = await bookService.getBooks(query)
+
+      searchTerm.value = search
+      fn(books)
+    }
+
+    function _removePageQuery(latestQuery: IQuery[]): IQuery[] {
+      return reject(x => x.key === 'page', latestQuery)
     }
 
     function _getSelectedCategories(category: string, value: string, list: any[]) {
       const hasValue = propEq('value', value)
       return ifElse(find(hasValue) as any, reject(hasValue), append({ key: category, value }))(list)
-    }
-
-    function _getBooks(fn: any) {
-      return async (search: string = '') => {
-        const books = await bookService.getBooks(buildQuery((latestQuery.value = _setQuery('q', [{ key: 'q', value: search }]))))
-        searchTerm.value = search
-        fn(books)
-      }
     }
 
     function _setQuery(key: string, updates: Array<{ [key: string]: string | number }>) {

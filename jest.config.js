@@ -1,10 +1,9 @@
-const { pathsToModuleNameMapper } = require('ts-jest/utils')
-const { compilerOptions } = require('./tsconfig.json')
-
 module.exports = {
   preset: '@vue/cli-plugin-unit-jest/presets/typescript',
   modulePaths: ['<rootDir>/src', '<rootDir>/node_modules'],
-  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths),
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1'
+  },
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
 
   transform: {
