@@ -30,8 +30,8 @@ import { defineComponent, ref } from 'vue'
 
 import { MenuItem, ProfileImage } from './shared'
 import UserPopup from './UserPopup.vue'
-import useToggle from '@/hooks/useToggle'
-import useComponentState from '@/hooks/useComponentState'
+import useToggle from '../hooks/useToggle'
+import useComponentState from '../hooks/useComponentState'
 
 export default defineComponent({
   components: { MenuItem, UserPopup, ProfileImage },

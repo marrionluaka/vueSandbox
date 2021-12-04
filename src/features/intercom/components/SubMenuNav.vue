@@ -27,9 +27,9 @@ nav
 <script lang="ts">
 import { defineComponent, ref, onMounted, Ref } from 'vue'
 
-import useToggle from '@/hooks/useToggle'
+import useToggle from '../hooks/useToggle'
 import { ISegment } from '@/global-types'
-import { SegmentPopup } from '@/components/intercom/shared'
+import { SegmentPopup } from './shared'
 
 export default defineComponent({
   components: { SegmentPopup },

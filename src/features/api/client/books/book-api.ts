@@ -1,4 +1,4 @@
-import { IBook } from '@/entities/book.entity'
+import { IBook } from '@/features/lib/entities/book.entity'
 
 export interface ISearchResults {
   count: number

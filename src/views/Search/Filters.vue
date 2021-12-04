@@ -23,12 +23,12 @@ ul(data-test="search-page-categories")
 <script lang="ts">
 import { defineComponent, ref, PropType, Ref } from 'vue'
 
-import { ICategory } from '@/entities/category.entity'
-import { ChevronIcon } from '../../components/sandbox/shared'
-import Checkbox from '../../components/sandbox/Checkbox/Checkbox.vue'
-import Accordion from '../../components/sandbox/Accordion/Accordion.vue'
-import AccordionPanel from '../../components/sandbox/Accordion/AccordionPanel.vue'
-import AccordionTitle from '../../components/sandbox/Accordion/AccordionTitle.vue'
+import { ChevronIcon } from '@/features/lib/components/shared'
+import { ICategory } from '@/features/lib/entities/category.entity'
+import Checkbox from '@/features/lib/components/Checkbox/Checkbox.vue'
+import Accordion from '@/features/lib/components/Accordion/Accordion.vue'
+import AccordionPanel from '@/features/lib/components/Accordion/AccordionPanel.vue'
+import AccordionTitle from '@/features/lib/components/Accordion/AccordionTitle.vue'
 
 export default defineComponent({
   components: {

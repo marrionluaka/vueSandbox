@@ -48,17 +48,17 @@
 import { computed, ComputedRef, defineComponent, onMounted, ref, Ref } from 'vue'
 import { append, reject, find, ifElse, propEq, map, over, lensProp, concat, __, pipe, flip } from 'ramda'
 
-import { bookService } from '@/api'
-import { IBook } from '@/entities/book.entity'
-import { ISearchResults } from '@/api/book-api'
-import { ICategory } from '@/entities/category.entity'
-import { useQueryBuilder } from '@/hooks/useQueryBuilder'
+import { bookService } from '@/features/api/client/books'
+import { IBook } from '@/features/lib/entities/book.entity'
+import { ICategory } from '@/features/lib/entities/category.entity'
+import { useQueryBuilder } from '@/features/lib/hooks/useQueryBuilder'
+import { ISearchResults } from '@/features/api/client/books/book-api'
 
 import Filters from './Filters.vue'
-import Search from '@/components/sandbox/Search/search.vue'
-import SearchItem from '@/components/sandbox/Search/SearchItem.vue'
-import SearchAction from '@/components/sandbox/Search/SearchAction.vue'
-import { ChevronIconRight, ChevronIcon } from '@/components/sandbox/shared'
+import Search from '@/features/lib/components/Search/search.vue'
+import SearchItem from '@/features/lib/components/Search/SearchItem.vue'
+import SearchAction from '@/features/lib/components/Search/SearchAction.vue'
+import { ChevronIconRight, ChevronIcon } from '@/features/lib/components/shared'
 
 interface IQuery {
   key: string

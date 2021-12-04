@@ -17,7 +17,7 @@ import {
   keys,
   KeyValuePair
 } from 'ramda'
-import { IBook } from '@/entities/book.entity'
+import { IBook } from '@/features/lib/entities/book.entity'
 
 export const bookCategories = ['author', 'genre', 'volume_sales', 'publisher', 'publication_date', 'imprint']
 

@@ -5,8 +5,8 @@ import { Factory, Model, hasMany } from 'miragejs'
 import faker from 'faker'
 import booksDb from './books-db.json'
 import { paginate } from './books-pagination'
-import { IBook } from '@/entities/book.entity'
-import { ICategory } from '@/entities/category.entity'
+import { IBook } from '@/features/lib/entities/book.entity'
+import { ICategory } from '@/features/lib/entities/category.entity'
 import { getBooks, sortBooks, bookCategories } from './books-utils'
 
 export default function(server: any) {

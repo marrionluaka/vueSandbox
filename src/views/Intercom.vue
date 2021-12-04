@@ -43,9 +43,9 @@
 import { defineComponent, ref, onMounted, Ref } from 'vue'
 
 import { IMessageData } from '@/global-types'
-import MenuNav from '@/components/intercom/MenuNav.vue'
-import { InboxCard } from '@/components/intercom/shared'
-import SubMenuNav from '@/components/intercom/SubMenuNav.vue'
+import MenuNav from '@/features/intercom/components/MenuNav.vue'
+import { InboxCard } from '@/features/intercom/components/shared'
+import SubMenuNav from '@/features/intercom/components/SubMenuNav.vue'
 
 export default defineComponent({
   components: { MenuNav, SubMenuNav, InboxCard },

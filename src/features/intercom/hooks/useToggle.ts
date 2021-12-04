@@ -1,4 +1,4 @@
-import useComponentState from '@/hooks/useComponentState'
+import useComponentState from '@/features/intercom/hooks/useComponentState'
 
 export default function useToggle() {
   const [open, setOpen] = useComponentState(false)

@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils'
 import SearchPage from './index.vue'
-import * as booksApi from '../../api'
+import * as booksApi from '@/features/api/client/books'
 
 jest.mock('lodash', () => ({ debounce: jest.fn(fn => fn) }))
 
