@@ -51,7 +51,7 @@ import { append, reject, find, ifElse, propEq, map, over, lensProp, concat, __, 
 import { bookService } from '@/features/api/client/books'
 import { IBook } from '@/features/lib/entities/book.entity'
 import { ICategory } from '@/features/lib/entities/category.entity'
-import { useQueryBuilder } from '@/features/lib/hooks/useQueryBuilder'
+import { buildQuery } from '@/features/lib/modules/queryBuilder'
 import { ISearchResults } from '@/features/api/client/books/book-api'
 
 import Filters from './Filters.vue'
@@ -100,8 +100,6 @@ export default defineComponent({
     const suggestedResults: Ref<IBook[]> = ref([])
     const selectedCategories: Ref<any[]> = ref([])
     const searchResults: Ref<ISearchResults> = ref({} as ISearchResults)
-
-    const { buildQuery } = useQueryBuilder()
 
     const hasMoreResults: ComputedRef<boolean> = computed(() => searchResults.value.count > searchResults.value.results?.length)
 
