@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import Search from './Search.vue'
 
-jest.mock('lodash', () => ({ debounce: jest.fn(fn => fn) }))
+jest.mock('lodash/debounce', () => jest.fn(fn => fn))
 
 describe('Search specs', () => {
   let wrapper: any

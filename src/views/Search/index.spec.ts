@@ -68,10 +68,11 @@ describe('Search page', () => {
   })
 
   it('sorts results in alphabetical order', async () => {
-    await wrapper.findComponent({ name: 'Dropdown' }).vm.$emit('on-selected', 'title')
-    await wrapper.vm.$nextTick()
+    const options = wrapper.find('[data-test="search-page-sort"]').findAll('option')
 
-    expect(getBooks).toBeCalledWith('limit=12&q=&sort_by=title')
+    await options[0].setSelected()
+
+    expect(getBooks).toBeCalledWith('limit=12&sort_by=title&q=')
   })
 
   it.skip('resets all filters', async () => {
