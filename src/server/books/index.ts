@@ -37,7 +37,7 @@ export default function(server: any) {
         src: '#',
         rating: () => getRating(5, 9),
         release_date: () => faker.date.past().toLocaleDateString(),
-        img: () => faker.image.lorempixel.imageUrl(640, 480, 'abstract', true)
+        img: () => faker.image.unsplash.imageUrl(640, 480, 'nature', '')
       })
     },
 
