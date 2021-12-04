@@ -1,4 +1,4 @@
-import Search from './Search.vue'
+import Search from './'
 import SearchItem from './SearchItem.vue'
 import { ChevronIconRight } from '../shared'
 import SearchAction from './SearchAction.vue'

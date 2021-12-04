@@ -55,7 +55,7 @@ import { buildQuery } from '@/features/lib/modules/queryBuilder'
 import { ISearchResults } from '@/features/api/client/books/book-api'
 
 import Filters from './Filters.vue'
-import Search from '@/features/lib/components/Search/search.vue'
+import Search from '@/features/lib/components/Search/index.vue'
 import SearchItem from '@/features/lib/components/Search/SearchItem.vue'
 import SearchAction from '@/features/lib/components/Search/SearchAction.vue'
 import { ChevronIconRight, ChevronIcon } from '@/features/lib/components/shared'
