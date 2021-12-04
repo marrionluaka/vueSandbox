@@ -56,10 +56,12 @@ export default function(server: any) {
     },
 
     routes() {
-      this.get('/api/messages', (schema: any) => {
+      this.namespace = 'intercom'
+
+      this.get('/messages', (schema: any) => {
         return schema.db.messages
       })
-      this.get('/api/segments', (schema: any) => {
+      this.get('/segments', (schema: any) => {
         return schema.db.segments
       })
     }

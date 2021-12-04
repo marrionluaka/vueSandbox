@@ -38,7 +38,7 @@ export default defineComponent({
     const [isPopupIsOpen, togglePopup] = useToggle()
 
     onMounted(async () => {
-      const response = await fetch('/api/segments')
+      const response = await fetch('/intercom/segments')
       const data = await response.json()
 
       segments.value = data

@@ -53,7 +53,7 @@ export default defineComponent({
     const messages: Ref<IMessageData[]> = ref([])
 
     onMounted(async () => {
-      const response = await fetch('/api/messages')
+      const response = await fetch('/intercom/messages')
       const data = await response.json()
 
       messages.value = data
