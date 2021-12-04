@@ -25,7 +25,7 @@ nav
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, Ref } from 'vue'
+import { defineComponent, PropType } from 'vue'
 
 import useToggle from '../hooks/useToggle'
 import { ISegment } from '@/global-types'
@@ -33,19 +33,18 @@ import { SegmentPopup } from './shared'
 
 export default defineComponent({
   components: { SegmentPopup },
+
+  props: {
+    segments: {
+      type: Array as PropType<ISegment[]>,
+      required: true
+    }
+  },
+
   setup() {
-    const segments: Ref<ISegment[]> = ref([])
     const [isPopupIsOpen, togglePopup] = useToggle()
 
-    onMounted(async () => {
-      const response = await fetch('/intercom/segments')
-      const data = await response.json()
-
-      segments.value = data
-    })
-
     return {
-      segments,
       isPopupIsOpen,
       togglePopup
     }

@@ -5,7 +5,7 @@
   //- sidebar
   .flex.flex-col.flex-none.w-64.space-y-4.p-4.relative.bg-gray-100
     //- TODO: pass in sub menu prop
-    SubMenuNav
+    SubMenuNav(:segments="segments")
   //- main content
   main.flex.flex-auto.bg-white.rounded-tl-xl.border-l.shadow-xl
     .border-r(class="w-1/4")
@@ -42,7 +42,7 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, Ref } from 'vue'
 
-import { IMessageData } from '@/global-types'
+import { IMessageData, ISegment } from '@/global-types'
 import MenuNav from '@/features/intercom/components/MenuNav.vue'
 import { InboxCard } from '@/features/intercom/components/shared'
 import SubMenuNav from '@/features/intercom/components/SubMenuNav.vue'
@@ -50,13 +50,19 @@ import SubMenuNav from '@/features/intercom/components/SubMenuNav.vue'
 export default defineComponent({
   components: { MenuNav, SubMenuNav, InboxCard },
   setup() {
+    const segments: Ref<ISegment[]> = ref([])
     const messages: Ref<IMessageData[]> = ref([])
 
     onMounted(async () => {
-      const response = await fetch('/intercom/messages')
-      const data = await response.json()
+      try {
+        const segRes = await fetch('/intercom/segments')
+        segments.value = await segRes.json()
 
-      messages.value = data
+        const msgRes = await fetch('/intercom/messages')
+        messages.value = await msgRes.json()
+      } catch (e) {
+        console.warn(e)
+      }
     })
 
     const setActive = (id: number) => {
@@ -68,7 +74,7 @@ export default defineComponent({
       }
     }
 
-    return { messages, setActive }
+    return { messages, segments, setActive }
   }
 })
 </script>
